@@ -1,0 +1,12 @@
+{
+  "title": "survey-of-coding-agents",
+  "template": "",
+  "agent": "claude",
+  "texCommand": "pdflatex",
+  "mainFile": "main.tex",
+  "resourcesDir": "resources",
+  "enableClaudeSkills": true,
+  "createdAt": "2026-02-28T03:26:21.776Z",
+  "updatedAt": "2026-02-28T06:00:26.367Z",
+  "lastOpenedFile": "/Users/ishibashiyouichi/claude-code-projects/2026-02-24-a_paper-writing/survey-of-coding-agents/main.tex"
+}

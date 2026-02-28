@@ -1,0 +1,69 @@
+\section{Code Completion Tools}
+\label{sec:completion}
+
+Code completion tools provide real-time, inline suggestions as developers type. They represent the most widely deployed category of AI coding tools.
+
+\subsection{Capability Overview}
+
+Modern code completion tools operate with tight latency constraints (typically under 100ms) to provide suggestions that feel instantaneous. They analyze the current file and limited surrounding context to predict what the developer will type next.
+
+Key capabilities include:
+\begin{itemize}
+    \item Single-line and multi-line completions
+    \item Fill-in-the-middle (FIM) suggestions
+    \item Context-aware completions using imports and recent edits
+    \item Ghost text preview before acceptance
+\end{itemize}
+
+\subsection{Major Systems}
+
+\textbf{GitHub Copilot}~\citep{github2022copilot} launched in 2022 as the first widely-available AI code completion tool, powered initially by Codex and later by custom models. It integrates with VS Code, JetBrains IDEs, and Neovim. Copilot has evolved to include chat capabilities (Copilot Chat) and workspace-level features (Copilot Workspace).
+
+\textbf{Amazon CodeWhisperer}~\citep{aws2023codewhisperer} provides similar functionality with emphasis on AWS service integration and security scanning. It offers a free tier for individual developers.
+
+\textbf{Tabnine} pioneered AI code completion before the LLM era and has evolved to incorporate large language models. It offers on-premise deployment options for enterprises with strict data requirements.
+
+\textbf{Codeium} provides free AI completion for individuals with a model trained to avoid reproducing licensed code verbatim.
+
+\textbf{Sourcegraph Cody} combines code completion with codebase-aware chat, leveraging Sourcegraph's code intelligence infrastructure.
+
+\subsection{Technical Approaches}
+
+\textbf{Fill-in-the-middle (FIM)}: Rather than left-to-right generation, FIM models are trained to complete code given both prefix and suffix context. This enables more accurate completions mid-function.
+
+\textbf{Context retrieval}: Systems retrieve relevant context from open files, recent edits, and imported modules. The quality of context selection significantly impacts suggestion relevance.
+
+\textbf{Model architectures}: Systems use various models---proprietary (Copilot), open-source fine-tuned (some Tabnine configurations), or custom-trained (Codeium).
+
+\subsection{Comparison}
+
+\begin{table}[h]
+\centering
+\caption{Comparison of code completion tools}
+\label{tab:completion}
+\begin{tabular}{lcccc}
+\toprule
+\textbf{System} & \textbf{Model} & \textbf{Free Tier} & \textbf{On-Premise} & \textbf{Chat} \\
+\midrule
+GitHub Copilot & Proprietary & Limited & No & Yes \\
+CodeWhisperer & Proprietary & Yes & No & Yes \\
+Tabnine & Various & Yes & Yes & Yes \\
+Codeium & Custom & Yes & Enterprise & Yes \\
+Sourcegraph Cody & Various & Yes & Enterprise & Yes \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Empirical Findings}
+
+GitHub reports that Copilot users complete tasks up to 55\% faster~\citep{peng2023impact}. Studies show typical acceptance rates of 25--35\% for suggestions. However, concerns persist about code quality---research has identified security vulnerabilities in AI-generated code~\citep{pearce2022asleep} and potential license compliance issues.
+
+\subsection{Limitations}
+
+Code completion tools fundamentally operate without understanding of broader project goals:
+\begin{itemize}
+    \item Cannot ask clarifying questions about intent
+    \item Limited cross-file context
+    \item Quality varies significantly by language and task type
+    \item May suggest code with security vulnerabilities or license issues
+\end{itemize}

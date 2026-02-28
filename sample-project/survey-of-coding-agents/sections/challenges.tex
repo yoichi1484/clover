@@ -1,0 +1,105 @@
+\section{Open Challenges and Future Directions}
+\label{sec:challenges}
+
+Despite rapid progress, significant challenges remain. We organize these into technical, software engineering, and human factors categories.
+
+\subsection{Technical Challenges}
+
+\subsubsection{Reliability and Consistency}
+
+Current agents remain unreliable on complex tasks. Specific issues include:
+\begin{itemize}
+    \item \textbf{Long-horizon failure}: Success rates decrease dramatically with task complexity
+    \item \textbf{Non-determinism}: Same inputs can produce different outputs
+    \item \textbf{Error cascades}: Early mistakes compound through multi-step tasks
+    \item \textbf{Debugging difficulty}: Agent reasoning is often opaque
+\end{itemize}
+
+\subsubsection{Context and Scalability}
+
+Large codebases present fundamental challenges:
+\begin{itemize}
+    \item Context windows, while growing, still cannot hold entire large projects
+    \item Retrieval quality varies significantly across codebases
+    \item Cross-repository dependencies are poorly handled
+    \item Real-time context updates during editing remain difficult
+\end{itemize}
+
+\subsubsection{Verification and Testing}
+
+Agents struggle to verify their own work:
+\begin{itemize}
+    \item Test generation quality lags code generation
+    \item Agents cannot reliably assess whether changes are correct
+    \item Formal verification integration remains limited
+\end{itemize}
+
+\subsection{Software Engineering Challenges}
+
+\subsubsection{Code Quality}
+
+Generated code may be functional but problematic:
+\begin{itemize}
+    \item Maintainability and readability concerns
+    \item Inconsistent adherence to project style guides
+    \item Violation of design patterns and idioms
+    \item Technical debt accumulation from AI-generated code
+\end{itemize}
+
+\subsubsection{Security}
+
+Security risks are significant:
+\begin{itemize}
+    \item Vulnerability introduction (common weakness patterns in training data)
+    \item Secret leakage in prompts and context
+    \item Supply chain risks from suggested dependencies
+    \item Insufficient sandboxing of agent execution
+\end{itemize}
+
+\subsubsection{Intellectual Property}
+
+Legal and ethical concerns persist:
+\begin{itemize}
+    \item License compliance in generated code
+    \item Attribution requirements
+    \item Copyright status of AI-generated code
+    \item Training data provenance questions
+\end{itemize}
+
+\subsection{Human Factors}
+
+\subsubsection{Skill Development}
+
+Impact on developer learning is unclear:
+\begin{itemize}
+    \item Junior developers may miss foundational learning
+    \item Over-reliance risks atrophy of debugging skills
+    \item New skills required (prompt engineering, agent supervision)
+    \item Educational curriculum implications
+\end{itemize}
+
+\subsubsection{Workflow Integration}
+
+Practical integration challenges:
+\begin{itemize}
+    \item Code review of AI-generated code requires new approaches
+    \item Team collaboration patterns with AI tools
+    \item Trust calibration---when to accept vs. verify suggestions
+    \item Organizational policies and governance
+\end{itemize}
+
+\subsection{Research Directions}
+
+We identify several promising research directions:
+
+\textbf{Better benchmarks}: Evaluation that captures real-world software engineering beyond bug fixes, including feature development, refactoring, and documentation.
+
+\textbf{Human-agent collaboration}: Understanding optimal interaction patterns, trust calibration, and division of labor between humans and agents.
+
+\textbf{Explainability}: Making agent reasoning transparent and debuggable.
+
+\textbf{Domain-specific agents}: Specialized agents for security, testing, DevOps, and specific frameworks.
+
+\textbf{Multi-agent systems}: Coordinating multiple specialized agents for complex software development tasks.
+
+\textbf{Longitudinal studies}: Understanding long-term impact on code quality, developer skills, and team dynamics.

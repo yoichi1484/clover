@@ -1,0 +1,266 @@
+{
+  "sources": [
+    {
+      "id": "github2023copilot",
+      "type": "web",
+      "title": "The economic impact of the AI-powered developer lifecycle and lessons from GitHub Copilot",
+      "author": "Thomas Dohmke",
+      "year": 2023,
+      "url": "https://github.blog/news-insights/research/the-economic-impact-of-the-ai-powered-developer-lifecycle-and-lessons-from-github-copilot/",
+      "accessed": "2026-02-28",
+      "notes": "Source for 46% AI-assisted code statistic (in files where Copilot is enabled)"
+    },
+    {
+      "id": "chen2021codex",
+      "type": "paper",
+      "title": "Evaluating Large Language Models Trained on Code",
+      "author": "Chen, Mark et al.",
+      "year": 2021,
+      "url": "https://arxiv.org/abs/2107.03374",
+      "notes": "Codex paper, 28.8% pass@1 on HumanEval"
+    },
+    {
+      "id": "nijkamp2022codegen",
+      "type": "paper",
+      "title": "CodeGen: An Open Large Language Model for Code with Multi-Turn Program Synthesis",
+      "author": "Nijkamp, Erik et al.",
+      "year": 2022,
+      "url": "https://arxiv.org/abs/2203.13474",
+      "notes": "CodeGen - multi-turn program synthesis"
+    },
+    {
+      "id": "li2023starcoder",
+      "type": "paper",
+      "title": "StarCoder: May the Source Be with You!",
+      "author": "Li, Raymond et al.",
+      "year": 2023,
+      "url": "https://arxiv.org/abs/2305.06161",
+      "notes": "StarCoder - open-source, permissively licensed code"
+    },
+    {
+      "id": "roziere2023codellama",
+      "type": "paper",
+      "title": "Code Llama: Open Foundation Models for Code",
+      "author": "Rozière, Baptiste et al.",
+      "year": 2023,
+      "url": "https://arxiv.org/abs/2308.12950",
+      "notes": "Code Llama - infilling and instruction following variants"
+    },
+    {
+      "id": "yao2022react",
+      "type": "paper",
+      "title": "ReAct: Synergizing Reasoning and Acting in Language Models",
+      "author": "Yao, Shunyu et al.",
+      "year": 2022,
+      "url": "https://arxiv.org/abs/2210.03629",
+      "notes": "ReAct pattern - reasoning and acting interleaved"
+    },
+    {
+      "id": "github2022copilot",
+      "type": "web",
+      "title": "GitHub Copilot",
+      "author": "GitHub",
+      "year": 2022,
+      "url": "https://github.com/features/copilot",
+      "notes": "GitHub Copilot product page"
+    },
+    {
+      "id": "aws2023codewhisperer",
+      "type": "web",
+      "title": "Amazon CodeWhisperer",
+      "author": "Amazon Web Services",
+      "year": 2023,
+      "url": "https://aws.amazon.com/codewhisperer/",
+      "notes": "Amazon CodeWhisperer - AWS integration, security scanning"
+    },
+    {
+      "id": "peng2023impact",
+      "type": "paper",
+      "title": "The Impact of AI on Developer Productivity: Evidence from GitHub Copilot",
+      "author": "Peng, Sida et al.",
+      "year": 2023,
+      "url": "https://arxiv.org/abs/2302.06590",
+      "notes": "55% faster task completion with Copilot"
+    },
+    {
+      "id": "pearce2022asleep",
+      "type": "paper",
+      "title": "Asleep at the Keyboard? Assessing the Security of GitHub Copilot's Code Contributions",
+      "author": "Pearce, Hammond et al.",
+      "year": 2022,
+      "venue": "IEEE Symposium on Security and Privacy",
+      "notes": "Security vulnerabilities in AI-generated code"
+    },
+    {
+      "id": "openai2023gpt4",
+      "type": "paper",
+      "title": "GPT-4 Technical Report",
+      "author": "OpenAI",
+      "year": 2023,
+      "url": "https://arxiv.org/abs/2303.08774",
+      "notes": "GPT-4 capabilities for coding"
+    },
+    {
+      "id": "anthropic2024claude",
+      "type": "web",
+      "title": "Claude 3 Model Card",
+      "author": "Anthropic",
+      "year": 2024,
+      "url": "https://www.anthropic.com/claude",
+      "notes": "Claude 3/3.5 Sonnet - 200K context window"
+    },
+    {
+      "id": "google2024gemini",
+      "type": "paper",
+      "title": "Gemini: A Family of Highly Capable Multimodal Models",
+      "author": "Google DeepMind",
+      "year": 2024,
+      "url": "https://arxiv.org/abs/2312.11805",
+      "notes": "Gemini - multimodal capabilities for code"
+    },
+    {
+      "id": "yang2024sweagent",
+      "type": "paper",
+      "title": "SWE-agent: Agent-Computer Interfaces Enable Automated Software Engineering",
+      "author": "Yang, John et al.",
+      "year": 2024,
+      "url": "https://arxiv.org/abs/2405.15793",
+      "notes": "SWE-agent - ACI design, 12.5% on SWE-bench with GPT-4"
+    },
+    {
+      "id": "cognition2024devin",
+      "type": "web",
+      "title": "Introducing Devin, the First AI Software Engineer",
+      "author": "Cognition Labs",
+      "year": 2024,
+      "url": "https://www.cognition.ai/blog/introducing-devin",
+      "notes": "Devin - full development environment, long-running tasks"
+    },
+    {
+      "id": "wang2024opendevin",
+      "type": "paper",
+      "title": "OpenDevin: An Open Platform for AI Software Developers as Generalist Agents",
+      "author": "Wang, Xingyao et al.",
+      "year": 2024,
+      "url": "https://arxiv.org/abs/2407.16741",
+      "notes": "OpenHands (formerly OpenDevin) - open-source platform for coding agents"
+    },
+    {
+      "id": "anthropic2024claudecode",
+      "type": "web",
+      "title": "Claude Code",
+      "author": "Anthropic",
+      "year": 2024,
+      "url": "https://claude.ai/code",
+      "notes": "Claude Code - CLI-based coding agent, permission system"
+    },
+    {
+      "id": "gauthier2024aider",
+      "type": "web",
+      "title": "Aider: AI Pair Programming in Your Terminal",
+      "author": "Paul Gauthier",
+      "year": 2024,
+      "url": "https://aider.chat",
+      "notes": "Aider - git-native, architect/editor model separation"
+    },
+    {
+      "id": "zhang2024autocoderover",
+      "type": "paper",
+      "title": "AutoCodeRover: Autonomous Program Improvement",
+      "author": "Zhang, Yuntao et al.",
+      "year": 2024,
+      "url": "https://arxiv.org/abs/2404.05427",
+      "notes": "AutoCodeRover - AST-based code localization, 19-22% on SWE-bench"
+    },
+    {
+      "id": "xia2024agentless",
+      "type": "paper",
+      "title": "Agentless: Demystifying LLM-based Software Engineering Agents",
+      "author": "Xia, Chunqiu Steven et al.",
+      "year": 2024,
+      "url": "https://arxiv.org/abs/2407.01489",
+      "notes": "Agentless - simple two-phase approach, 18-27% on SWE-bench"
+    },
+    {
+      "id": "cursor2024",
+      "type": "web",
+      "title": "Cursor: The AI-first Code Editor",
+      "author": "Anysphere",
+      "year": 2024,
+      "url": "https://cursor.com",
+      "notes": "Cursor - VS Code fork, Composer, @ mentions, agent mode"
+    },
+    {
+      "id": "github2024workspace",
+      "type": "web",
+      "title": "GitHub Copilot Workspace",
+      "author": "GitHub",
+      "year": 2024,
+      "url": "https://github.blog/2024-04-29-github-copilot-workspace/",
+      "notes": "Copilot Workspace - issue-to-PR workflow"
+    },
+    {
+      "id": "liu2023humaneval",
+      "type": "paper",
+      "title": "Is Your Code Generated by ChatGPT Really Correct? Rigorous Evaluation of Large Language Models for Code Generation",
+      "author": "Liu, Jiawei et al.",
+      "year": 2023,
+      "venue": "NeurIPS",
+      "notes": "HumanEval+ - augmented test cases for code generation evaluation"
+    },
+    {
+      "id": "austin2021mbpp",
+      "type": "paper",
+      "title": "Program Synthesis with Large Language Models",
+      "author": "Austin, Jacob et al.",
+      "year": 2021,
+      "url": "https://arxiv.org/abs/2108.07732",
+      "notes": "MBPP - 974 crowd-sourced Python problems"
+    },
+    {
+      "id": "jimenez2024swebench",
+      "type": "paper",
+      "title": "SWE-bench: Can Language Models Resolve Real-World GitHub Issues?",
+      "author": "Jimenez, Carlos E et al.",
+      "year": 2024,
+      "venue": "ICLR",
+      "notes": "SWE-bench - 2,294 real GitHub issues, de facto standard for agent evaluation"
+    },
+    {
+      "id": "li2022codeforces",
+      "type": "paper",
+      "title": "Competition-Level Code Generation with AlphaCode",
+      "author": "Li, Yujia et al.",
+      "year": 2022,
+      "venue": "Science",
+      "notes": "AlphaCode - competitive programming benchmark (CodeContests)"
+    },
+    {
+      "id": "lai2022ds1000",
+      "type": "paper",
+      "title": "DS-1000: A Natural and Reliable Benchmark for Data Science Code Generation",
+      "author": "Lai, Yuhang et al.",
+      "year": 2023,
+      "venue": "ICML",
+      "notes": "DS-1000 - data science tasks with pandas, numpy"
+    },
+    {
+      "id": "ding2023crosscodeeval",
+      "type": "paper",
+      "title": "CrossCodeEval: A Diverse and Multilingual Benchmark for Cross-File Code Completion",
+      "author": "Ding, Yangruibo et al.",
+      "year": 2023,
+      "venue": "NeurIPS",
+      "notes": "CrossCodeEval - cross-file context utilization"
+    },
+    {
+      "id": "liu2023repobench",
+      "type": "paper",
+      "title": "RepoBench: Benchmarking Repository-Level Code Auto-Completion Systems",
+      "author": "Liu, Tianyang et al.",
+      "year": 2023,
+      "url": "https://arxiv.org/abs/2306.03091",
+      "notes": "RepoBench - repository-level code completion"
+    }
+  ]
+}

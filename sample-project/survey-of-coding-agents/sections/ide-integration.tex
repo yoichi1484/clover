@@ -1,0 +1,82 @@
+\section{AI-Integrated Development Environments}
+\label{sec:ide}
+
+A new category of development environments combines completion, chat, and agent capabilities into unified experiences. These tools aim to reduce the friction of switching between separate AI tools.
+
+\subsection{The Integration Thesis}
+
+Integrated AI IDEs offer several advantages:
+\begin{itemize}
+    \item \textbf{Rich context}: Access to project structure, open files, terminal, git state
+    \item \textbf{Lower friction}: No copy-paste between tools
+    \item \textbf{Unified experience}: Completion, chat, and agent modes in one interface
+    \item \textbf{Workflow integration}: AI actions integrated with editing, debugging, version control
+\end{itemize}
+
+\subsection{Capability Tiers}
+
+We observe four tiers of AI capability in modern IDEs:
+
+\begin{description}
+    \item[Tier 1] Inline completion---baseline capability all AI IDEs share
+    \item[Tier 2] Chat panel with codebase awareness
+    \item[Tier 3] Multi-file editing and refactoring
+    \item[Tier 4] Agentic execution (run commands, iterate on tests)
+\end{description}
+
+\subsection{Major Systems}
+
+\subsubsection{Cursor}
+
+Cursor~\citep{cursor2024} is a VS Code fork with deep AI integration:
+\begin{itemize}
+    \item \textbf{Composer}: Multi-file editing with diff preview
+    \item \textbf{@ mentions}: Fine-grained context control (@file, @codebase, @docs)
+    \item \textbf{Agent mode}: Autonomous task execution with terminal access
+    \item \textbf{Tab}: Predictive edits based on recent changes
+\end{itemize}
+
+\subsubsection{Windsurf}
+
+Windsurf (from Codeium) introduces the ``Cascade'' agent:
+\begin{itemize}
+    \item Deep codebase indexing for context retrieval
+    \item Flow-based interaction model
+    \item Autonomous multi-step task execution
+\end{itemize}
+
+\subsubsection{GitHub Copilot Workspace}
+
+Copilot Workspace~\citep{github2024workspace} focuses on the issue-to-pull-request workflow:
+\begin{itemize}
+    \item Starts from GitHub issue description
+    \item Generates specification and implementation plan
+    \item Proposes multi-file changes
+    \item Integrates with GitHub's review and CI systems
+\end{itemize}
+
+\subsubsection{Other Systems}
+
+\textbf{JetBrains AI Assistant} integrates AI into IntelliJ-family IDEs with completion, chat, and refactoring support.
+
+\textbf{Zed AI} builds AI capabilities into a new high-performance editor with collaborative features.
+
+\subsection{UX Innovations}
+
+AI IDEs have pioneered several interface patterns:
+\begin{itemize}
+    \item \textbf{Diff previews}: Show proposed changes before applying
+    \item \textbf{Context control}: @ mentions and file pinning for precise context
+    \item \textbf{Approval workflows}: Human checkpoints before file modifications
+    \item \textbf{Inline editing}: Apply AI suggestions directly in the editor
+\end{itemize}
+
+\subsection{Trade-offs}
+
+Integrated environments involve trade-offs:
+\begin{itemize}
+    \item \textbf{Vendor lock-in}: Leaving means losing AI capabilities
+    \item \textbf{Model flexibility}: Some lock users to specific providers
+    \item \textbf{Privacy}: Codebase indexing raises data handling questions
+    \item \textbf{Learning curve}: New interfaces and workflows to learn
+\end{itemize}

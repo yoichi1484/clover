@@ -1,0 +1,59 @@
+\section{A Taxonomy of Coding Agents}
+\label{sec:taxonomy}
+
+To organize the diverse landscape of coding agents, we propose a taxonomy with three dimensions: autonomy level, interaction scope, and integration mode.
+
+\subsection{Dimension 1: Autonomy Level}
+
+We identify four levels of autonomy:
+
+\begin{description}
+    \item[Level 1 -- Reactive] The system responds only to explicit user requests. It takes no initiative and makes no suggestions unless prompted.
+    \item[Level 2 -- Proactive] The system can suggest actions or improvements, but the human must execute any changes.
+    \item[Level 3 -- Semi-autonomous] The system can execute actions, but requires human approval for each step or significant action.
+    \item[Level 4 -- Autonomous] The system can plan and execute multi-step tasks independently, seeking human input only for clarification or final review.
+\end{description}
+
+\subsection{Dimension 2: Interaction Scope}
+
+The scope of code that a system can understand and modify:
+
+\begin{description}
+    \item[Single-line] Completions and suggestions at the cursor position.
+    \item[Function/block] Generation or modification of complete functions or code blocks.
+    \item[File] Operations spanning an entire file, including refactoring and restructuring.
+    \item[Repository] Cross-file changes, feature implementation, and codebase-wide modifications.
+\end{description}
+
+\subsection{Dimension 3: Integration Mode}
+
+How the system integrates with the developer's workflow:
+
+\begin{description}
+    \item[IDE extension] Plugins for existing editors (VS Code, JetBrains, Vim).
+    \item[Chat interface] Web-based or standalone conversation interfaces.
+    \item[CLI tool] Command-line interfaces for terminal-centric workflows.
+    \item[Standalone platform] Complete development environments with integrated AI capabilities.
+\end{description}
+
+\subsection{System Categories}
+
+Using this taxonomy, we identify four primary categories. Table~\ref{tab:taxonomy} summarizes how each category maps to our three dimensions, where L1--L4 refer to the autonomy levels defined above.
+
+\begin{table}[h]
+\centering
+\caption{Taxonomy of coding agent categories}
+\label{tab:taxonomy}
+\begin{tabular}{lccc}
+\toprule
+\textbf{Category} & \textbf{Autonomy} & \textbf{Scope} & \textbf{Integration} \\
+\midrule
+Code Completion Tools & L1--L2 & Single-line--Block & IDE extension \\
+Conversational Assistants & L2--L3 & Function--File & Chat interface \\
+Autonomous Agents & L3--L4 & File--Repository & CLI, Standalone \\
+Integrated Environments & L1--L4 & Single-line--Repository & Standalone platform \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The following sections examine each category in detail.

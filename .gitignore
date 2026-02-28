@@ -1,0 +1,42 @@
+# Dependencies
+node_modules/
+
+# Build outputs
+dist/
+out/
+release/
+
+# Generated icons (keep only source icon.svg)
+build/icon.icns
+build/icon.png
+build/icon.iconset/
+
+# Worktrees
+worktrees/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Environment
+.env
+.env.local
+
+# Claude Code local settings (user-specific)
+.claude/
+
+# Test files
+test-*.png
+test-*.mjs
+
+# Temporary files
+tmp/
+
+# Development plans
+docs/plans/

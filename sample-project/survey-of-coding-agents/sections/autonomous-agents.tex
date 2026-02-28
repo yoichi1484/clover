@@ -1,0 +1,136 @@
+\section{Autonomous Coding Agents}
+\label{sec:agents}
+
+Autonomous coding agents represent the frontier of AI-assisted development. Unlike assistants that require manual application of suggestions, these systems can directly read files, write code, execute commands, and iterate on their work.
+
+\subsection{Defining Autonomy}
+
+An autonomous coding agent has:
+\begin{itemize}
+    \item \textbf{Environment access}: Can read and write files in an actual codebase
+    \item \textbf{Execution capability}: Can run commands, tests, and scripts
+    \item \textbf{Feedback loops}: Observes results and iterates on errors
+    \item \textbf{Multi-step planning}: Decomposes complex tasks into actionable steps
+\end{itemize}
+
+The key distinction from assistants is operational: agents \emph{act} on code rather than merely \emph{advising} about it.
+
+\subsection{Architectural Patterns}
+
+Most autonomous agents follow variations of an observe-think-act loop:
+
+\begin{enumerate}
+    \item \textbf{Observe}: Gather information (read files, search code, check test results)
+    \item \textbf{Think}: Reason about the task and plan next steps
+    \item \textbf{Act}: Execute an action (edit file, run command)
+    \item \textbf{Repeat}: Process results and continue
+\end{enumerate}
+
+\textbf{Tool use} is central to agent capabilities. Common tools include:
+\begin{itemize}
+    \item File operations (read, write, search, navigate)
+    \item Shell command execution
+    \item Web search and documentation lookup
+    \item Browser automation for testing
+\end{itemize}
+
+\textbf{Memory} mechanisms help agents maintain context across long tasks:
+\begin{itemize}
+    \item Conversation history
+    \item Scratchpads for working notes
+    \item Retrieved context from codebase search
+\end{itemize}
+
+\subsection{Major Systems}
+
+\subsubsection{SWE-agent}
+
+SWE-agent~\citep{yang2024sweagent} from Princeton introduces the Agent-Computer Interface (ACI)---a set of custom commands designed for LLM interaction with codebases. Rather than raw shell access, SWE-agent provides commands like \texttt{find\_file}, \texttt{search\_dir}, and \texttt{edit} with structured output formats optimized for LLM parsing.
+
+Key innovations:
+\begin{itemize}
+    \item ACI reduces errors from shell command complexity
+    \item Search/replace editing prevents whole-file regeneration
+    \item Achieves 12.5\% on SWE-bench (original) with GPT-4
+\end{itemize}
+
+\subsubsection{Devin}
+
+Devin~\citep{cognition2024devin} from Cognition Labs is positioned as an ``AI software engineer'' with access to a complete development environment: shell, browser, and editor. It can execute long-running tasks autonomously, maintaining state across sessions.
+
+Key features:
+\begin{itemize}
+    \item Full development environment (not just file access)
+    \item Planning and checkpoint system for complex tasks
+    \item Browser for testing and documentation lookup
+    \item Reported strong SWE-bench performance (proprietary evaluation)
+\end{itemize}
+
+\subsubsection{OpenHands}
+
+OpenHands~\citep{wang2024opendevin} (formerly OpenDevin) provides an open-source platform for building coding agents. It offers:
+\begin{itemize}
+    \item Modular architecture supporting different agent implementations
+    \item Sandboxed execution environment
+    \item Web interface and API access
+    \item Multiple agent implementations for research comparison
+\end{itemize}
+
+\subsubsection{Claude Code}
+
+Claude Code~\citep{anthropic2024claudecode} is Anthropic's CLI-based coding agent. It emphasizes:
+\begin{itemize}
+    \item Terminal-native workflow for existing developer tools
+    \item Permission system for controlled autonomy
+    \item Integration with git workflows
+    \item Extended thinking for complex reasoning
+\end{itemize}
+
+\subsubsection{Aider}
+
+Aider~\citep{gauthier2024aider} takes a git-native approach:
+\begin{itemize}
+    \item Automatic commits for each change
+    \item Repository map for efficient context selection
+    \item Architect/editor model separation for planning vs. implementation
+    \item Support for multiple LLM providers
+\end{itemize}
+
+\subsubsection{Other Notable Systems}
+
+\textbf{AutoCodeRover}~\citep{zhang2024autocoderover} uses program structure analysis (AST) rather than text search to locate relevant code, improving precision on bug localization.
+
+\textbf{Agentless}~\citep{xia2024agentless} challenges the complexity of agent architectures, showing that a simple two-phase approach (localization then repair) can achieve competitive results with lower cost.
+
+\subsection{Comparison}
+
+\begin{table}[h]
+\centering
+\caption{Comparison of autonomous coding agents}
+\label{tab:agents}
+\begin{tabular}{lccccc}
+\toprule
+\textbf{System} & \textbf{Open} & \textbf{Model} & \textbf{Interface} & \textbf{SWE-bench} \\
+\midrule
+SWE-agent & Yes & Various & CLI & 12--18\% \\
+Devin & No & Proprietary & Web & Claimed high \\
+OpenHands & Yes & Various & Web/CLI & 15--25\% \\
+Claude Code & No & Claude & CLI & Not published \\
+Aider & Yes & Various & CLI & Benchmark varies \\
+AutoCodeRover & Yes & Various & CLI & 19--22\% \\
+Agentless & Yes & Various & CLI & 18--27\% \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Common Challenges}
+
+Autonomous agents face several persistent challenges:
+
+\textbf{Long-horizon reliability}: Success rates decrease dramatically on tasks requiring many steps. Error cascades are common.
+
+\textbf{Error recovery}: Agents often struggle to recover from mistakes, sometimes entering loops of repeated failed attempts.
+
+\textbf{Security}: Agents with shell access pose security risks. Sandboxing and permission systems are essential but imperfect.
+
+\textbf{Cost}: Agent runs can be expensive, with complex tasks requiring many LLM calls.

@@ -1,0 +1,53 @@
+\section{Background and Foundations}
+\label{sec:background}
+
+This section provides the technical foundations necessary to understand modern coding agents, covering large language models for code, the transition from models to tools, and the agent paradigm.
+
+\subsection{Large Language Models for Code}
+
+The foundation of modern coding agents is the large language model (LLM) trained on code. The breakthrough came with OpenAI's Codex~\citep{chen2021codex}, a GPT model fine-tuned on publicly available code from GitHub. Codex demonstrated that language models could generate functionally correct code from natural language descriptions, achieving 28.8\% pass@1 on the HumanEval benchmark.
+
+Subsequent models expanded capabilities and accessibility. CodeGen~\citep{nijkamp2022codegen} introduced multi-turn program synthesis. StarCoder~\citep{li2023starcoder} provided an open-source alternative trained on permissively licensed code. Code Llama~\citep{roziere2023codellama} brought code capabilities to the Llama model family with specialized variants for infilling and instruction following.
+
+These models share key capabilities:
+\begin{itemize}
+    \item \textbf{Code understanding}: Parsing and comprehending existing code
+    \item \textbf{Code generation}: Producing code from natural language or partial code
+    \item \textbf{Infilling}: Completing code given surrounding context (fill-in-the-middle)
+\end{itemize}
+
+\subsection{From Models to Tools}
+
+A raw language model is not a usable development tool. The transition requires several enabling components:
+
+\textbf{Context management}: Real codebases exceed model context limits. Tools must select relevant context---open files, imported modules, similar code---to include in prompts.
+
+\textbf{Prompt engineering}: The way requests are formatted significantly impacts output quality. Tools develop specialized prompts for different tasks (completion, explanation, refactoring).
+
+\textbf{Output processing}: Model outputs must be parsed, validated, and integrated into the development environment. This includes handling code formatting, language detection, and error recovery.
+
+\textbf{Interaction design}: Single-turn generation is limiting. Modern tools support multi-turn conversations, iterative refinement, and human-in-the-loop workflows.
+
+\subsection{The Agent Paradigm}
+
+The most capable coding systems employ an agent architecture. An agent, in this context, is a system that can:
+\begin{itemize}
+    \item \textbf{Plan}: Decompose complex tasks into steps
+    \item \textbf{Use tools}: Execute actions beyond text generation (file I/O, shell commands, web search)
+    \item \textbf{Observe}: Process feedback from tool execution
+    \item \textbf{Iterate}: Adjust behavior based on results
+\end{itemize}
+
+The ReAct pattern~\citep{yao2022react}---Reasoning and Acting---has been particularly influential. ReAct interleaves reasoning traces (``I need to find the function definition...'') with actions (search for function) and observations (search results). This approach enables models to tackle multi-step tasks that require gathering information and adapting to intermediate results.
+
+\subsection{Terminology}
+
+We adopt the following definitions throughout this survey:
+
+\begin{description}
+    \item[Code completion] Real-time, inline suggestions during editing, typically single-line or block-level.
+    \item[Code generation] Creating code from natural language descriptions, often function or file-level.
+    \item[Coding assistant] An interactive system providing conversational help with coding tasks.
+    \item[Coding agent] An autonomous system capable of planning and executing multi-step coding tasks with minimal human intervention.
+    \item[Agentic coding] Human-AI collaborative workflows where agents handle implementation while humans guide and review.
+\end{description}

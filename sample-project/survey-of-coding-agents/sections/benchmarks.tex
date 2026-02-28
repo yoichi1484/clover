@@ -1,0 +1,99 @@
+\section{Evaluation Benchmarks and Metrics}
+\label{sec:benchmarks}
+
+Evaluating coding agents requires benchmarks that capture real-world utility. This section surveys major benchmarks and discusses their strengths and limitations.
+
+\subsection{Function-Level Benchmarks}
+
+\textbf{HumanEval}~\citep{chen2021codex} contains 164 hand-written Python programming problems. Each problem includes a function signature, docstring, and test cases. The model must generate a function body that passes all tests.
+
+\textbf{HumanEval+}~\citep{liu2023humaneval} augments HumanEval with additional test cases to catch solutions that pass original tests through shortcuts or edge case failures.
+
+\textbf{MBPP}~\citep{austin2021mbpp} (Mostly Basic Python Programming) contains 974 crowd-sourced Python problems designed to be solvable by entry-level programmers.
+
+These benchmarks measure basic code generation ability but have significant limitations:
+\begin{itemize}
+    \item Problems are short, self-contained, and unrealistic
+    \item No project context or cross-file dependencies
+    \item Focus on algorithmic problems rather than software engineering
+\end{itemize}
+
+\subsection{Repository-Level Benchmarks}
+
+\textbf{SWE-bench}~\citep{jimenez2024swebench} represents a paradigm shift in evaluation. It contains 2,294 real GitHub issues from popular Python repositories, paired with the pull requests that resolved them. An agent must:
+\begin{enumerate}
+    \item Understand the issue description
+    \item Navigate an unfamiliar codebase
+    \item Identify relevant files
+    \item Generate a patch that resolves the issue
+    \item Pass the repository's test suite
+\end{enumerate}
+
+Variants include:
+\begin{itemize}
+    \item \textbf{SWE-bench Lite}: 300-problem subset for faster evaluation
+    \item \textbf{SWE-bench Verified}: 500 human-verified problems with confirmed solvability
+\end{itemize}
+
+SWE-bench has become the de facto standard for evaluating autonomous coding agents, though it has limitations:
+\begin{itemize}
+    \item Focuses primarily on bug fixes
+    \item Python-only
+    \item Test-based evaluation may miss code quality issues
+\end{itemize}
+
+\subsection{Other Benchmarks}
+
+\textbf{CodeContests}~\citep{li2022codeforces} uses competitive programming problems, testing algorithmic reasoning rather than software engineering.
+
+\textbf{DS-1000}~\citep{lai2022ds1000} focuses on data science tasks using pandas, numpy, and related libraries.
+
+\textbf{CrossCodeEval}~\citep{ding2023crosscodeeval} evaluates cross-file context utilization.
+
+\textbf{RepoBench}~\citep{liu2023repobench} measures repository-level code completion.
+
+\subsection{Metrics}
+
+\textbf{pass@k}: The probability that at least one of $k$ generated solutions passes all tests. Typically reported as pass@1, pass@10, pass@100.
+
+\textbf{Resolution rate}: For SWE-bench, the percentage of issues where the generated patch passes the test suite.
+
+\textbf{Cost per task}: Emerging metric tracking API costs, relevant for practical deployment.
+
+\subsection{Current State of the Art}
+
+\begin{table}[h]
+\centering
+\caption{Selected results on major benchmarks (as of early 2025)}
+\label{tab:benchmarks}
+\begin{tabular}{lcc}
+\toprule
+\textbf{Benchmark} & \textbf{Top Performance} & \textbf{System} \\
+\midrule
+HumanEval & 95\%+ pass@1 & GPT-4, Claude 3.5 \\
+MBPP & 85\%+ pass@1 & Various frontier models \\
+SWE-bench Verified & 40--55\% & Top agents (2024--2025) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Limitations of Current Evaluation}
+
+Current benchmarks leave significant gaps:
+
+\begin{itemize}
+    \item \textbf{Data contamination}: Popular benchmarks may appear in training data
+    \item \textbf{Narrow task types}: Most focus on bug fixes, missing feature development
+    \item \textbf{Missing dimensions}: Code quality, maintainability, security not measured
+    \item \textbf{Real-world gap}: Benchmark success may not predict production utility
+\end{itemize}
+
+\subsection{Emerging Approaches}
+
+Researchers are exploring:
+\begin{itemize}
+    \item Human evaluation studies of AI-assisted development
+    \item A/B testing in production environments
+    \item Multi-dimensional quality assessment (correctness + style + security)
+    \item Task diversity beyond bug fixing
+\end{itemize}

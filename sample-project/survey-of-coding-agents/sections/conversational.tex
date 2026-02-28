@@ -1,0 +1,57 @@
+\section{Conversational Coding Assistants}
+\label{sec:conversational}
+
+Conversational coding assistants enable multi-turn dialogue about code. Unlike completion tools, they support open-ended interaction but typically lack direct access to the developer's environment.
+
+\subsection{Capability Overview}
+
+Conversational assistants can:
+\begin{itemize}
+    \item Explain existing code
+    \item Generate functions from descriptions
+    \item Debug issues when given error messages
+    \item Suggest refactoring approaches
+    \item Discuss architecture and design trade-offs
+\end{itemize}
+
+The interaction model requires developers to copy code into the conversation and manually apply suggestions---a significant workflow friction compared to integrated tools.
+
+\subsection{Major Systems}
+
+\textbf{ChatGPT} (GPT-4, GPT-4o)~\citep{openai2023gpt4} established conversational coding as a mainstream capability. Its broad training enables handling diverse languages, frameworks, and coding styles.
+
+\textbf{Claude}~\citep{anthropic2024claude} (Claude 3, Claude 3.5 Sonnet) emphasizes longer context windows (up to 200K tokens) enabling analysis of larger codebases within a single conversation.
+
+\textbf{Gemini}~\citep{google2024gemini} integrates with Google's ecosystem and offers multimodal capabilities for understanding code alongside documentation and diagrams.
+
+\textbf{Phind} specializes in developer queries, combining web search with code generation for up-to-date library and API information.
+
+\subsection{Technical Considerations}
+
+\textbf{Context windows}: The evolution from 8K to 128K+ token contexts has dramatically expanded what can be discussed in a single conversation. Claude's 200K context enables analyzing entire small codebases.
+
+\textbf{System prompts}: Providers tune models with system prompts that improve coding performance, specify output formatting, and establish behavioral guidelines.
+
+\textbf{Code formatting}: Models must correctly identify programming languages, maintain consistent indentation, and produce syntactically valid code.
+
+\subsection{Strengths}
+
+Conversational assistants excel at:
+\begin{itemize}
+    \item Flexible, exploratory interactions
+    \item Handling ambiguous requests through clarification
+    \item Educational explanations and learning support
+    \item Language and framework-agnostic assistance
+    \item Discussing trade-offs and alternatives
+\end{itemize}
+
+\subsection{Limitations}
+
+Key limitations include:
+\begin{itemize}
+    \item \textbf{Workflow friction}: Copy-paste interaction disrupts development flow
+    \item \textbf{No environment access}: Cannot see actual file contents or run tests
+    \item \textbf{Cannot verify}: Suggestions may not work in context
+    \item \textbf{Hallucination}: May fabricate APIs, library functions, or syntax
+    \item \textbf{Stale knowledge}: Training cutoffs mean outdated library information
+\end{itemize}
