@@ -1,6 +1,6 @@
 # Clover
 
-Clover is a writing support tool that combines NotebookLM, Claude Code, and TeX.
+NotebookLM-style source management + Claude Code + local TeX editor.
 
 1. **Local TeX Environment**
    A TeX editor with PDF preview, running entirely on your machine. Work offline with full control over your files.
