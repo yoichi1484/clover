@@ -6,10 +6,10 @@ A LaTeX editor with Claude Code integration and NotebookLM-style source manageme
 
 ## Features
 
-- From data to paper: add experiment results as sources, analyze data, generate figures, and write — all in one workflow
-- Source management: manage PDFs, experiment data, and notes as references (inspired by NotebookLM)
+- From data to paper: add experiment results as sources, analyze data, generate figures, and write
+- NotebookLM-style Source management: manage PDFs, experiment data, and notes as references
 - Claude Code integration — reads your local files and writes LaTeX directly
-- Deep research: find and collect academic papers automatically
+- Deep research: find and collect papers automatically
 - Claude Code skills designed for paper writing
 - Git diff view: see what the agent changed at a glance
 - Desktop app (Electron) and web app (for remote servers)
@@ -58,7 +58,7 @@ If port 8080 is in use, it automatically tries 8081, 8082, etc.
 
 ### Use Claude Code to Write a Paper
 
-1. Click "Start" or press Enter in the terminal panel to start Claude Code
+1. Press Enter in the terminal panel to start Claude Code
 2. Enter instructions like "Write the introduction" or "Fix the compile error"
 
 ### Keyboard Shortcuts
