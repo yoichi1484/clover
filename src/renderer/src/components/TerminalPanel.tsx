@@ -1,7 +1,6 @@
 import { useRef, useEffect, useCallback, useState, forwardRef, useImperativeHandle } from 'react'
 import { Terminal } from 'xterm'
 import { FitAddon } from 'xterm-addon-fit'
-import { Square } from 'lucide-react'
 import 'xterm/css/xterm.css'
 import { api } from '../api'
 
@@ -355,20 +354,6 @@ export const TerminalPanel = forwardRef<TerminalPanelHandle, TerminalPanelProps>
     }
   }, [isRunning])
 
-  const handleStop = async () => {
-    if (!isRunning) return
-
-    // Send Ctrl+C to stop Claude (keeps shell alive)
-    await api.writeToPty('\x03')
-    setIsRunning(false)
-    claudeReadyRef.current = false
-
-    if (xtermRef.current) {
-      xtermRef.current.write(`\r\n\x1b[33m[Stopped by user - terminal ready for commands]\x1b[0m\r\n`)
-    }
-  }
-
-
   const sendMessage = useCallback((message: string) => {
     if (!isRunning) {
       console.warn('[TerminalPanel] Cannot send message: Claude not running')
@@ -415,16 +400,6 @@ export const TerminalPanel = forwardRef<TerminalPanelHandle, TerminalPanelProps>
         <span className="text-sm text-green-400 italic">
           Try <span className={`transition-opacity duration-500 ${isFading ? 'opacity-0' : 'opacity-100'}`}>"{SKILL_EXAMPLES[exampleIndex]}"</span>
         </span>
-        {isRunning && (
-          <button
-            onClick={handleStop}
-            className="px-3 py-1 bg-red-700 hover:bg-red-600 rounded text-sm flex items-center gap-1"
-            title="Stop agent"
-          >
-            <Square size={12} />
-            <span>Stop</span>
-          </button>
-        )}
       </div>
 
       {/* Terminal output area */}

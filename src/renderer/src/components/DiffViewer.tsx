@@ -44,6 +44,9 @@ export function DiffViewer({ original, modified }: DiffViewerProps): JSX.Element
       modified: modifiedModel,
     })
 
+    // Hide line numbers on the original (left) pane to avoid double line numbers
+    diffEditor.getOriginalEditor().updateOptions({ lineNumbers: 'off' })
+
     editorRef.current = diffEditor
 
     return () => {
