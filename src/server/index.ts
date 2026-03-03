@@ -43,7 +43,7 @@ app.use('/api/directories', directoriesRouter)
 app.use('/api/git', gitRouter)
 
 // Serve static files (built frontend)
-const staticPath = join(__dirname, '../renderer')
+const staticPath = join(__dirname, '../../renderer')
 app.use(express.static(staticPath))
 
 // SPA fallback

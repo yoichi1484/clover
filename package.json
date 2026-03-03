@@ -14,7 +14,7 @@
     "dist": "electron-vite build && electron-builder",
     "dev:web": "vite --config vite.config.web.ts",
     "build:web": "vite build --config vite.config.web.ts && tsc -p tsconfig.server.json",
-    "start:server": "node dist/server/index.js"
+    "start:server": "node dist/server/server/index.js"
   },
   "build": {
     "appId": "com.clover.app",
