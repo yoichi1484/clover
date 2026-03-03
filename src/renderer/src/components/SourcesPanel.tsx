@@ -46,10 +46,11 @@ function SourceItem({ source, onToggleEnabled, onClick }: SourceItemProps): JSX.
       <input
         type="checkbox"
         checked={isEnabled}
-        onChange={(e) => {
-          onToggleEnabled(source.id, e.target.checked)
+        onClick={(e) => {
+          e.stopPropagation()
+          onToggleEnabled(source.id, !isEnabled)
         }}
-        onClick={(e) => e.stopPropagation()}
+        onChange={() => {}}
         className="w-4 h-4 cursor-pointer"
         style={{ accentColor: '#6b7280' }}
       />
