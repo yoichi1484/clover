@@ -52,6 +52,7 @@ function SourceItem({ source, onToggleEnabled, onClick }: SourceItemProps): JSX.
         }}
         onClick={(e) => e.stopPropagation()}
         className="w-4 h-4 cursor-pointer"
+        style={{ accentColor: '#6b7280' }}
       />
       <FileIcon name={source.name || source.title} />
       <span

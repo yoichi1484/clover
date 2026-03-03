@@ -1,6 +1,6 @@
 // src/renderer/src/api/web.ts
 
-import type { CloverAPI, FileEntry, ProjectConfig, RecentProject, Source, LatexmkSettings } from './types'
+import type { CloverAPI, FileEntry, ProjectConfig, RecentProject, Source, LatexmkSettings, GitCommit, GitFileStatus } from './types'
 
 const API_BASE = ''  // Same origin
 
@@ -300,6 +300,14 @@ export const webAPI: CloverAPI = {
   // Window state (Web is always "fullscreen" - no traffic lights)
   isFullScreen: () => Promise.resolve(true),
   onFullScreenChange: () => () => {},
+
+  // Git
+  gitStatus: (projectPath) => fetchAPI(`/git/status?projectPath=${encodeURIComponent(projectPath)}`),
+  gitLog: (projectPath, limit = 20) => fetchAPI(`/git/log?projectPath=${encodeURIComponent(projectPath)}&limit=${limit}`),
+  gitShow: async (projectPath, hash, filePath) => {
+    const result = await fetchAPI<{ content: string }>(`/git/show?projectPath=${encodeURIComponent(projectPath)}&hash=${encodeURIComponent(hash)}&filePath=${encodeURIComponent(filePath)}`)
+    return result.content
+  },
 
   // Environment
   isWeb: () => true

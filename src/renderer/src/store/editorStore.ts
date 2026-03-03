@@ -11,6 +11,9 @@ interface EditorState {
   compileOutput: string
   compileError: string | null
   editorTheme: EditorTheme
+  diffMode: boolean
+  selectedCommit: { hash: string; message: string; date: string } | null
+  diffOriginalContent: string
 
   setCurrentFile: (path: string | null) => void
   setContent: (content: string) => void
@@ -21,6 +24,9 @@ interface EditorState {
   clearCompileOutput: () => void
   setCompileError: (error: string | null) => void
   setEditorTheme: (theme: EditorTheme) => void
+  setDiffMode: (mode: boolean) => void
+  setSelectedCommit: (commit: { hash: string; message: string; date: string } | null) => void
+  setDiffOriginalContent: (content: string) => void
 }
 
 export const useEditorStore = create<EditorState>()(
@@ -34,6 +40,9 @@ export const useEditorStore = create<EditorState>()(
       compileOutput: '',
       compileError: null,
       editorTheme: 'nord',
+      diffMode: false,
+      selectedCommit: null,
+      diffOriginalContent: '',
 
       setCurrentFile: (path) => set({ currentFile: path }),
       setContent: (content) => set({ content, isDirty: true }),
@@ -45,7 +54,10 @@ export const useEditorStore = create<EditorState>()(
       })),
       clearCompileOutput: () => set({ compileOutput: '' }),
       setCompileError: (compileError) => set({ compileError }),
-      setEditorTheme: (editorTheme) => set({ editorTheme })
+      setEditorTheme: (editorTheme) => set({ editorTheme }),
+      setDiffMode: (diffMode) => set({ diffMode }),
+      setSelectedCommit: (selectedCommit) => set({ selectedCommit }),
+      setDiffOriginalContent: (diffOriginalContent) => set({ diffOriginalContent })
     }),
     {
       name: 'editor-settings',

@@ -52,6 +52,17 @@ export interface RecentProject {
   createdAt: string
 }
 
+export interface GitCommit {
+  hash: string
+  message: string
+  date: string
+}
+
+export interface GitFileStatus {
+  status: string
+  path: string
+}
+
 export interface CloverAPI {
   // File operations
   selectDirectory(): Promise<string | null>
@@ -104,6 +115,11 @@ export interface CloverAPI {
   // Window state (Electron only, Web returns defaults)
   isFullScreen(): Promise<boolean>
   onFullScreenChange(callback: (isFullScreen: boolean) => void): () => void
+
+  // Git
+  gitStatus(projectPath: string): Promise<{ isGitRepo: boolean; files: GitFileStatus[] }>
+  gitLog(projectPath: string, limit?: number): Promise<GitCommit[]>
+  gitShow(projectPath: string, hash: string, filePath: string): Promise<string>
 
   // Environment
   isWeb(): boolean

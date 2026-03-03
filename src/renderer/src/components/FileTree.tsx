@@ -8,9 +8,10 @@ interface FileTreeItemProps {
   depth: number
   onSelect: (path: string) => void
   selectedPath: string | null
+  gitStatuses?: Map<string, string>
 }
 
-function FileTreeItem({ entry, depth, onSelect, selectedPath }: FileTreeItemProps): JSX.Element {
+function FileTreeItem({ entry, depth, onSelect, selectedPath, gitStatuses }: FileTreeItemProps): JSX.Element {
   const [isOpen, setIsOpen] = useState(false)
   const [children, setChildren] = useState<FileEntry[]>([])
 
@@ -51,6 +52,26 @@ function FileTreeItem({ entry, depth, onSelect, selectedPath }: FileTreeItemProp
           <FileIcon name={entry.name} />
         )}
         <span className="text-sm truncate">{entry.name}</span>
+        {(() => {
+          if (!gitStatuses || entry.isDirectory) return null
+          // Try to find status by matching the end of the path
+          for (const [relativePath, status] of gitStatuses.entries()) {
+            if (entry.path.endsWith(relativePath)) {
+              return (
+                <span className={`ml-1 text-xs font-mono flex-shrink-0 ${
+                  status === 'M' ? 'text-yellow-400' :
+                  status === '??' ? 'text-green-400' :
+                  status === 'D' ? 'text-red-400' :
+                  status === 'A' ? 'text-green-400' :
+                  'text-gray-400'
+                }`}>
+                  {status === '??' ? 'U' : status}
+                </span>
+              )
+            }
+          }
+          return null
+        })()}
       </div>
       {isOpen && children.map((child) => (
         <FileTreeItem
@@ -59,6 +80,7 @@ function FileTreeItem({ entry, depth, onSelect, selectedPath }: FileTreeItemProp
           depth={depth + 1}
           onSelect={onSelect}
           selectedPath={selectedPath}
+          gitStatuses={gitStatuses}
         />
       ))}
     </div>
@@ -98,9 +120,10 @@ function FileIcon({ name }: { name: string }): JSX.Element {
 interface FileTreeProps {
   onFileSelect: (path: string) => void
   selectedPath: string | null
+  gitStatuses?: Map<string, string>
 }
 
-export function FileTree({ onFileSelect, selectedPath }: FileTreeProps): JSX.Element {
+export function FileTree({ onFileSelect, selectedPath, gitStatuses }: FileTreeProps): JSX.Element {
   const { projectPath, files, setFiles } = useProjectStore()
 
   const loadFiles = useCallback(async () => {
@@ -133,6 +156,7 @@ export function FileTree({ onFileSelect, selectedPath }: FileTreeProps): JSX.Ele
           depth={0}
           onSelect={onFileSelect}
           selectedPath={selectedPath}
+          gitStatuses={gitStatuses}
         />
       ))}
     </div>

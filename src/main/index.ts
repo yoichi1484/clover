@@ -7,6 +7,7 @@ import { registerProjectManagerHandlers } from './services/projectManager'
 import { registerSourceManagerHandlers } from './services/sourceManager'
 import { registerLatexmkConfigHandlers } from './services/latexmkConfig'
 import { registerPtyManagerHandlers, setPtyProjectPath } from './services/ptyManager'
+import { registerGitHandlers } from './services/gitService'
 
 function createWindow(): void {
   const mainWindow = new BrowserWindow({
@@ -64,6 +65,7 @@ app.whenReady().then(() => {
   registerProjectManagerHandlers()
   registerSourceManagerHandlers()
   registerLatexmkConfigHandlers()
+  registerGitHandlers()
 
   // PTY project path handler
   ipcMain.handle('pty:setProjectPath', (_event, path: string | null) => {

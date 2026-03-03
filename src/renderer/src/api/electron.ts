@@ -36,6 +36,9 @@ declare global {
       getTexFiles: (projectPath: string) => Promise<string[]>
       onLatexmkrcChanged: (callback: (settings: LatexmkSettings) => void) => () => void
       getSkillsPath: () => Promise<string>
+      gitStatus: (projectPath: string) => Promise<{ isGitRepo: boolean; files: { status: string; path: string }[] }>
+      gitLog: (projectPath: string, limit?: number) => Promise<{ hash: string; message: string; date: string }[]>
+      gitShow: (projectPath: string, hash: string, filePath: string) => Promise<string>
       isFullScreen: () => Promise<boolean>
       onFullScreenChange: (callback: (isFullScreen: boolean) => void) => () => void
     }
@@ -103,6 +106,11 @@ export const electronAPI: CloverAPI = {
 
   // App info
   getSkillsPath: () => window.api.getSkillsPath(),
+
+  // Git
+  gitStatus: (projectPath) => window.api.gitStatus(projectPath),
+  gitLog: (projectPath, limit) => window.api.gitLog(projectPath, limit),
+  gitShow: (projectPath, hash, filePath) => window.api.gitShow(projectPath, hash, filePath),
 
   // Window state
   isFullScreen: () => window.api.isFullScreen(),

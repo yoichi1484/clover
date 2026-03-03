@@ -4,6 +4,7 @@ import { Toolbar } from './components/Toolbar'
 import { FileTree } from './components/FileTree'
 import { LatexEditor } from './components/LatexEditor'
 import { PdfViewer } from './components/PdfViewer'
+import { DiffViewer } from './components/DiffViewer'
 import { TerminalPanel, TerminalPanelHandle } from './components/TerminalPanel'
 import { SourcesPanel } from './components/SourcesPanel'
 import { SettingsPanel } from './components/SettingsPanel'
@@ -18,9 +19,12 @@ import { api } from './api'
 function App(): JSX.Element {
   const [showSettingsPanel, setShowSettingsPanel] = useState(false)
   const [sources, setSources] = useState<Source[]>([])
+  const [commits, setCommits] = useState<{ hash: string; message: string; date: string }[]>([])
+  const [gitStatuses, setGitStatuses] = useState<Map<string, string>>(new Map())
+  const [gitNotInitialized, setGitNotInitialized] = useState(false)
 
   const { projectPath, config } = useProjectStore()
-  const { currentFile, content, pdfPath, compileError, isCompiling } = useEditorStore()
+  const { currentFile, content, pdfPath, compileError, isCompiling, diffMode, diffOriginalContent, selectedCommit } = useEditorStore()
   const editorStore = useEditorStore()
   const terminalRef = useRef<TerminalPanelHandle>(null)
 
@@ -112,6 +116,26 @@ After fixing, please verify that compilation succeeds.`
     editorStore.setContent(value)
   }, [editorStore])
 
+  const handleDiffMode = useCallback(async () => {
+    if (!projectPath || !currentFile) return
+    const status = await api.gitStatus(projectPath)
+    if (!status.isGitRepo) {
+      setGitNotInitialized(true)
+      editorStore.setDiffMode(true)
+      return
+    }
+    setGitNotInitialized(false)
+    const commitList = await api.gitLog(projectPath, 20)
+    setCommits(commitList)
+    if (commitList.length > 0) {
+      const commit = commitList[0]
+      const originalContent = await api.gitShow(projectPath, commit.hash, currentFile)
+      editorStore.setSelectedCommit(commit)
+      editorStore.setDiffOriginalContent(originalContent)
+      editorStore.setDiffMode(true)
+    }
+  }, [projectPath, currentFile, editorStore])
+
   useKeyboardShortcuts({
     onSave: saveCurrentFile,
     onCompile: compile,
@@ -151,6 +175,26 @@ After fixing, please verify that compilation succeeds.`
   useEffect(() => {
     loadSources()
   }, [loadSources])
+
+  // Poll git status for file tree markers
+  useEffect(() => {
+    if (!projectPath) return
+    const fetchStatus = async () => {
+      try {
+        const result = await api.gitStatus(projectPath)
+        if (result.isGitRepo) {
+          const map = new Map<string, string>()
+          result.files.forEach(f => map.set(f.path, f.status))
+          setGitStatuses(map)
+        }
+      } catch {
+        // ignore errors
+      }
+    }
+    fetchStatus()
+    const interval = setInterval(fetchStatus, 5000)
+    return () => clearInterval(interval)
+  }, [projectPath])
 
   // Watch for sources.json changes to auto-reload sources
   // Use both file watcher events AND polling as fallback
@@ -213,49 +257,115 @@ After fixing, please verify that compilation succeeds.`
           <FileTree
             onFileSelect={handleFileSelect}
             selectedPath={currentFile}
+            gitStatuses={gitStatuses}
           />
         }
         editorHeader={
-          <div className="flex items-center justify-between px-3 py-3 border-b border-gray-700 bg-[#252525]">
-            <span className="text-sm text-gray-300 truncate">
-              {currentFile ? currentFile.split('/').pop() : 'No file selected'}
-            </span>
-            <div className="flex items-center gap-3">
-              {/* Compile status */}
-              {isCompiling ? (
-                <span className="text-sm text-yellow-400 flex items-center gap-1">
-                  <span className="animate-spin">⟳</span> Compiling...
+          <div className="border-b border-gray-700 bg-[#252525]">
+            {/* Row 1: filename + tabs + status + compile */}
+            <div className="flex items-center justify-between px-3 py-2">
+              <div className="flex items-center gap-3">
+                <span className="text-sm text-gray-300 truncate">
+                  {currentFile ? currentFile.split('/').pop() : 'No file selected'}
                 </span>
-              ) : compileError ? (
-                <span className="text-sm text-red-400 flex items-center gap-1" title={compileError}>
-                  ✗ Error
-                </span>
-              ) : pdfPath ? (
-                <span className="text-sm text-green-400 flex items-center gap-1">
-                  ✓ Compiled
-                </span>
-              ) : null}
-              {/* Compile button */}
-              <button
-                onClick={compile}
-                disabled={isCompiling}
-                className="px-3 py-1.5 text-sm bg-indigo-700 hover:bg-indigo-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white rounded"
-                title="Compile (Cmd+B)"
-              >
-                Compile
-              </button>
+                {currentFile && (
+                  <>
+                    <button
+                      onClick={() => { editorStore.setDiffMode(false); setGitNotInitialized(false) }}
+                      className={`px-2 py-0.5 text-xs rounded ${!diffMode ? 'bg-gray-600 text-white' : 'text-gray-400 hover:text-white'}`}
+                    >
+                      Edit
+                    </button>
+                    <button
+                      onClick={handleDiffMode}
+                      className={`px-2 py-0.5 text-xs rounded ${diffMode ? 'bg-gray-600 text-white' : 'text-gray-400 hover:text-white'}`}
+                    >
+                      Diff
+                    </button>
+                  </>
+                )}
+              </div>
+              <div className="flex items-center gap-3">
+                {gitStatuses.size > 0 && (
+                  <span className="text-xs text-yellow-400" title={`${gitStatuses.size} uncommitted change(s)`}>
+                    {gitStatuses.size} Uncommitted
+                  </span>
+                )}
+                {isCompiling ? (
+                  <span className="text-xs text-yellow-400 flex items-center gap-1">
+                    <span className="animate-spin">⟳</span> Compiling...
+                  </span>
+                ) : compileError ? (
+                  <span className="text-xs text-red-400 flex items-center gap-1" title={compileError}>
+                    ✗ Error
+                  </span>
+                ) : pdfPath ? (
+                  <span className="text-xs text-green-400 flex items-center gap-1">
+                    ✓ Compiled
+                  </span>
+                ) : null}
+                <button
+                  onClick={compile}
+                  disabled={isCompiling}
+                  className="px-3 py-1 text-xs bg-indigo-700 hover:bg-indigo-600 disabled:bg-gray-600 disabled:cursor-not-allowed text-white rounded"
+                  title="Compile (Cmd+B)"
+                >
+                  Compile
+                </button>
+              </div>
             </div>
+            {/* Row 2: commit selector (only in diff mode) */}
+            {diffMode && commits.length > 0 && (
+              <div className="flex items-center gap-2 px-3 py-1 border-t border-gray-700">
+                <span className="text-xs text-gray-500">Compare with:</span>
+                <select
+                  value={selectedCommit?.hash || ''}
+                  onChange={async (e) => {
+                    const hash = e.target.value
+                    const commit = commits.find(c => c.hash === hash)
+                    if (commit && currentFile) {
+                      const original = await api.gitShow(projectPath!, hash, currentFile)
+                      editorStore.setSelectedCommit(commit)
+                      editorStore.setDiffOriginalContent(original)
+                    }
+                  }}
+                  className="text-xs bg-gray-700 text-gray-300 rounded px-2 py-0.5 flex-1 truncate"
+                >
+                  {commits.map(c => (
+                    <option key={c.hash} value={c.hash}>
+                      {c.hash.substring(0, 7)} — {c.message}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )}
           </div>
         }
         editor={
           currentFile ? (
-            <div className="h-full">
-              <LatexEditor
-                value={content}
-                onChange={handleEditorChange}
-                onSave={saveCurrentFile}
-              />
-            </div>
+            diffMode ? (
+              gitNotInitialized ? (
+                <div className="h-full flex items-center justify-center text-gray-400">
+                  <div className="text-center">
+                    <p className="text-sm mb-2">This project is not a git repository.</p>
+                    <p className="text-xs text-gray-500">Tell Claude Code: &quot;git init&quot;</p>
+                  </div>
+                </div>
+              ) : (
+                <DiffViewer
+                  original={diffOriginalContent}
+                  modified={content}
+                />
+              )
+            ) : (
+              <div className="h-full">
+                <LatexEditor
+                  value={content}
+                  onChange={handleEditorChange}
+                  onSave={saveCurrentFile}
+                />
+              </div>
+            )
           ) : (
             <div className="h-full flex items-center justify-center text-gray-500">
               Select a file to edit

@@ -85,7 +85,13 @@ const api = {
     const handler = (_: Electron.IpcRendererEvent, isFullScreen: boolean) => callback(isFullScreen)
     ipcRenderer.on('window:fullScreenChange', handler)
     return () => ipcRenderer.removeListener('window:fullScreenChange', handler)
-  }
+  },
+
+  // Git operations
+  gitStatus: (projectPath: string) => ipcRenderer.invoke('git:status', projectPath),
+  gitLog: (projectPath: string, limit?: number) => ipcRenderer.invoke('git:log', projectPath, limit),
+  gitShow: (projectPath: string, hash: string, filePath: string) =>
+    ipcRenderer.invoke('git:show', projectPath, hash, filePath)
 }
 
 if (process.contextIsolated) {
