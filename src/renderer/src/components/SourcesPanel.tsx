@@ -51,8 +51,7 @@ function SourceItem({ source, onToggleEnabled, onClick }: SourceItemProps): JSX.
           onToggleEnabled(source.id, !isEnabled)
         }}
         onChange={() => {}}
-        className="w-4 h-4 cursor-pointer"
-        style={{ accentColor: '#6b7280' }}
+        className="w-4 h-4 cursor-pointer accent-indigo-500"
       />
       <FileIcon name={source.name || source.title} />
       <span
