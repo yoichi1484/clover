@@ -142,9 +142,10 @@ function App(): JSX.Element {
 
   const handleToggleSourceEnabled = useCallback(async (sourceId: string, enabled: boolean) => {
     if (!projectPath) return
+    // Optimistic update: update UI immediately before async call
+    setSources(prev => prev.map(s => s.id === sourceId ? { ...s, enabled } : s))
     await api.setSourceEnabled(projectPath, sourceId, enabled)
-    await loadSources()
-  }, [projectPath, loadSources])
+  }, [projectPath])
 
   useEffect(() => {
     loadSources()
