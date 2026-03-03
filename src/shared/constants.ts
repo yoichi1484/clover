@@ -8,7 +8,7 @@ export const CLAUDE_MD_CONTENT = `# Writing Project
 
 This is a document writing project.
 
-Reference materials are listed in \`.clover/sources.json\`.
+Reference materials are listed in \`.clover/sources.json\`. Only use sources where \`enabled\` is not \`false\`.
 
 Use clover-skills proactively.
 
