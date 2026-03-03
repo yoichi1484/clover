@@ -28,33 +28,7 @@ function App(): JSX.Element {
   const editorStore = useEditorStore()
   const terminalRef = useRef<TerminalPanelHandle>(null)
 
-  // Handler for compile errors - auto-start agent if enabled
-  const handleCompileError = useCallback((error: string, log: string) => {
-    console.log('[App] handleCompileError called', {
-      autoStartAgentOnError: config?.autoStartAgentOnError,
-      projectPath,
-      terminalRefCurrent: !!terminalRef.current,
-      error: error.slice(0, 100)
-    })
-    if (config?.autoStartAgentOnError && projectPath && terminalRef.current) {
-      const errorPrompt = `LaTeX compilation failed. Please analyze the error and fix the relevant file.
-
-Error:
-${error}
-
-Compile Log (last 1000 chars):
-${log.slice(-1000)}
-
-After fixing, please verify that compilation succeeds.`
-
-      console.log('[App] Calling startAndSendMessage')
-      terminalRef.current.startAndSendMessage(errorPrompt)
-    }
-  }, [config?.autoStartAgentOnError, projectPath])
-
-  const { openProject, createProject, openFile, saveCurrentFile, compile } = useProject({
-    onCompileError: handleCompileError
-  })
+  const { openProject, createProject, openFile, saveCurrentFile, compile } = useProject({})
 
   const handleNewProject = useCallback(async () => {
     const path = await api.selectDirectory()

@@ -1,7 +1,7 @@
 import { useRef, useEffect, useCallback, useState, forwardRef, useImperativeHandle } from 'react'
 import { Terminal } from 'xterm'
 import { FitAddon } from 'xterm-addon-fit'
-import { Play, Square } from 'lucide-react'
+import { Square } from 'lucide-react'
 import 'xterm/css/xterm.css'
 import { api } from '../api'
 
@@ -23,7 +23,6 @@ interface TerminalPanelProps {
     mainFile: string
     resourcesDir: string
     enableClaudeSkills?: boolean
-    autoStartAgent?: boolean
   }
   sources?: Array<{ name: string; path: string }>
 }
@@ -76,7 +75,6 @@ export const TerminalPanel = forwardRef<TerminalPanelHandle, TerminalPanelProps>
   const pendingTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const claudeReadyRef = useRef(false)
   const hasSpawnedShell = useRef(false)
-  const hasAutoStarted = useRef(false)
   const previousProjectPath = useRef<string | null>(null)
   const [retryCount, setRetryCount] = useState(0)
   const [isRetrying, setIsRetrying] = useState(false)
@@ -113,10 +111,14 @@ export const TerminalPanel = forwardRef<TerminalPanelHandle, TerminalPanelProps>
         setShellReady(true)
 
         // Pre-fill the claude command (without pressing Enter) so user can see it and press Enter to start
-        let command = 'claude'
-        if (config?.enableClaudeSkills) {
+        let command: string
+        if (config?.claudeCommand) {
+          command = config.claudeCommand
+        } else if (config?.enableClaudeSkills) {
           const skillsPath = await api.getSkillsPath()
           command = `claude --plugin-dir "${skillsPath}"`
+        } else {
+          command = 'claude'
         }
         // Write command to terminal without executing (no \r at the end)
         api.writeToPty(command)
@@ -138,15 +140,16 @@ export const TerminalPanel = forwardRef<TerminalPanelHandle, TerminalPanelProps>
     claudeReadyRef.current = false
     startTimeRef.current = Date.now()
 
-    // Build the full command with --plugin-dir if skills are enabled
-    let command = 'claude'
-    if (config?.enableClaudeSkills) {
+    // Build the full command
+    if (config?.claudeCommand) {
+      api.writeToPty(config.claudeCommand + '\r')
+    } else if (config?.enableClaudeSkills) {
       api.getSkillsPath().then((skillsPath) => {
         const fullCommand = `claude --plugin-dir "${skillsPath}"`
         api.writeToPty(fullCommand + '\r')
       })
     } else {
-      api.writeToPty(command + '\r')
+      api.writeToPty('claude\r')
     }
   }, [isRunning, shellReady, config?.enableClaudeSkills])
 
@@ -157,7 +160,6 @@ export const TerminalPanel = forwardRef<TerminalPanelHandle, TerminalPanelProps>
       console.log('[TerminalPanel] Project changed, restarting PTY')
       api.destroyPty()
       hasSpawnedShell.current = false
-      hasAutoStarted.current = false
       claudeReadyRef.current = false
       errorDetectedRef.current = false
       setIsRunning(false)
@@ -194,13 +196,6 @@ export const TerminalPanel = forwardRef<TerminalPanelHandle, TerminalPanelProps>
     }
   }, [projectPath, terminalReady, spawnShell])
 
-  // Auto-start Claude when shell is ready (only if autoStartAgent is enabled)
-  useEffect(() => {
-    if (shellReady && !isRunning && !hasAutoStarted.current && config?.autoStartAgent) {
-      hasAutoStarted.current = true
-      startClaude()
-    }
-  }, [shellReady, isRunning, startClaude, config?.autoStartAgent])
 
   // Initialize xterm
   useEffect(() => {
@@ -332,7 +327,6 @@ export const TerminalPanel = forwardRef<TerminalPanelHandle, TerminalPanelProps>
       setIsRunning(false)
       setShellReady(false)
       hasSpawnedShell.current = false
-      hasAutoStarted.current = false
       setIsRetrying(false)
       setRetryCount(0)
 
@@ -421,7 +415,7 @@ export const TerminalPanel = forwardRef<TerminalPanelHandle, TerminalPanelProps>
         <span className="text-sm text-green-400 italic">
           Try <span className={`transition-opacity duration-500 ${isFading ? 'opacity-0' : 'opacity-100'}`}>"{SKILL_EXAMPLES[exampleIndex]}"</span>
         </span>
-        {isRunning ? (
+        {isRunning && (
           <button
             onClick={handleStop}
             className="px-3 py-1 bg-red-700 hover:bg-red-600 rounded text-sm flex items-center gap-1"
@@ -429,15 +423,6 @@ export const TerminalPanel = forwardRef<TerminalPanelHandle, TerminalPanelProps>
           >
             <Square size={12} />
             <span>Stop</span>
-          </button>
-        ) : shellReady && (
-          <button
-            onClick={startClaude}
-            className="px-3 py-1 bg-indigo-700 hover:bg-indigo-600 rounded text-sm flex items-center gap-1"
-            title="Start agent"
-          >
-            <Play size={12} />
-            <span>Start</span>
           </button>
         )}
       </div>

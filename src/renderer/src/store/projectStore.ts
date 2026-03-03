@@ -27,7 +27,6 @@ export interface ProjectConfig {
   compiler: TexCompiler
   texLiveVersion: TexLiveVersion
   enableClaudeSkills: boolean
-  autoStartAgent?: boolean  // Auto-start agent when project opens (default: false)
   lastOpenedFile?: string
   // Timestamps
   createdAt: string

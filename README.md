@@ -12,7 +12,6 @@ A LaTeX editor with Claude Code integration and NotebookLM-style source manageme
 - Deep research: find and collect academic papers automatically
 - Claude Code skills designed for paper writing
 - Git diff view: see what the agent changed at a glance
-- Auto-fix compile errors
 - Desktop app (Electron) and web app (for remote servers)
 
 ## Quick Start

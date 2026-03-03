@@ -36,14 +36,27 @@ export function SettingsPanel({ isOpen, onClose }: SettingsPanelProps): JSX.Elem
   })
   const [texFiles, setTexFiles] = useState<string[]>([])
   const [isSaving, setIsSaving] = useState(false)
+  const [claudeCommand, setClaudeCommand] = useState('')
+  const [defaultClaudeCommand, setDefaultClaudeCommand] = useState('claude')
 
   // Load settings when panel opens
   useEffect(() => {
     if (isOpen && projectPath) {
       loadSettings()
       loadTexFiles()
+      // Compute default claude command
+      if (config?.enableClaudeSkills) {
+        api.getSkillsPath().then((skillsPath) => {
+          const defaultCmd = `claude --plugin-dir "${skillsPath}"`
+          setDefaultClaudeCommand(defaultCmd)
+          setClaudeCommand(config?.claudeCommand || defaultCmd)
+        })
+      } else {
+        setDefaultClaudeCommand('claude')
+        setClaudeCommand(config?.claudeCommand || 'claude')
+      }
     }
-  }, [isOpen, projectPath])
+  }, [isOpen, projectPath, config?.enableClaudeSkills])
 
   // Update local settings state when config changes (from store update)
   useEffect(() => {
@@ -248,36 +261,32 @@ export function SettingsPanel({ isOpen, onClose }: SettingsPanelProps): JSX.Elem
             </button>
           </div>
 
-          {/* Auto-start Agent */}
-          <div className="flex items-center justify-between">
-            <div>
-              <label className="block text-sm font-medium text-gray-300">
-                Auto-start Agent
-              </label>
-              <p className="text-xs text-gray-500">
-                Automatically start Claude when opening project
-              </p>
-            </div>
-            <button
-              onClick={() => {
+          {/* Claude Command */}
+          <div>
+            <label className="block text-sm font-medium text-gray-300 mb-1">
+              Claude Command
+            </label>
+            <input
+              type="text"
+              value={claudeCommand}
+              onChange={(e) => {
+                const value = e.target.value
+                setClaudeCommand(value)
                 if (config) {
-                  const newConfig = { ...config, autoStartAgent: !config.autoStartAgent }
+                  // Store custom command only if different from default
+                  const customCmd = value === defaultClaudeCommand ? undefined : value
+                  const newConfig = { ...config, claudeCommand: customCmd }
                   setConfig(newConfig)
                   if (projectPath) {
                     api.saveProjectConfig(projectPath, newConfig)
                   }
                 }
               }}
-              className={`relative w-11 h-6 rounded-full transition-colors ${
-                config?.autoStartAgent ? 'bg-indigo-700' : 'bg-gray-600'
-              }`}
-            >
-              <span
-                className={`absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full transition-transform ${
-                  config?.autoStartAgent ? 'translate-x-5' : 'translate-x-0'
-                }`}
-              />
-            </button>
+              className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded text-white text-sm focus:outline-none focus:border-blue-500"
+            />
+            <p className="mt-1 text-xs text-gray-500">
+              Startup command for Claude Code. Restart terminal to apply changes.
+            </p>
           </div>
 
           {/* Editor Theme */}
