@@ -45,18 +45,18 @@ If port 8080 is in use, it automatically tries 8081, 8082, etc.
 
 ## Usage
 
-### Creating a Project
+### Create a Project
 
 1. Click "New Project"
 2. Select a directory
 3. Start writing LaTeX
 
-### Sources (optional)
+### Add Sources (optional)
 
 - Add local files (PDFs, CSVs, notes) via the Sources panel — their paths become visible to Claude Code
 - Or use Deep Research to find and add academic papers automatically
 
-### Claude Code
+### Use Claude Code to Write a Paper
 
 1. Click "Start" or press Enter in the terminal panel to start Claude Code
 2. Enter instructions like "Write the introduction" or "Fix the compile error"
