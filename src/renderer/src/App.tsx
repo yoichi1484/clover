@@ -142,7 +142,6 @@ function App(): JSX.Element {
 
   const handleToggleSourceEnabled = useCallback(async (sourceId: string, enabled: boolean) => {
     if (!projectPath) return
-    // Optimistic update: update UI immediately before async call
     setSources(prev => prev.map(s => s.id === sourceId ? { ...s, enabled } : s))
     await api.setSourceEnabled(projectPath, sourceId, enabled)
   }, [projectPath])
@@ -171,28 +170,17 @@ function App(): JSX.Element {
     return () => clearInterval(interval)
   }, [projectPath])
 
-  // Watch for sources.json changes to auto-reload sources
-  // Use both file watcher events AND polling as fallback
-  // (external tools like Claude Code may modify files without triggering watch events)
+  // Watch for sources.json changes (e.g. when Claude Code modifies it externally)
   useEffect(() => {
     if (!projectPath) return
 
-    // File watcher callback
     const cleanup = api.onFileChange((event, path) => {
       if (path.endsWith('sources.json') && path.includes('.clover')) {
         loadSources()
       }
     })
 
-    // Polling fallback - check every 3 seconds
-    const pollInterval = setInterval(() => {
-      loadSources()
-    }, 3000)
-
-    return () => {
-      cleanup?.()
-      clearInterval(pollInterval)
-    }
+    return () => { cleanup?.() }
   }, [projectPath, loadSources])
 
   // Show start screen if no project is open
