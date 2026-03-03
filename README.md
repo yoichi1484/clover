@@ -1,16 +1,16 @@
 # Clover
 
-Clover is a writing support tool built on Claude Code, with NotebookLM-style source management and a local TeX editor.
+A LaTeX editor with Claude Code integration and NotebookLM-style source management, designed for writing papers from local data.
 
 ![Clover](screenshot.png)
 
 ## Features
 
-- LaTeX editor with syntax highlighting and real-time PDF preview
-- Powered by Claude Code — reads your local files directly
-- Source management: add PDFs, experiment data, notes as references for writing
-- From data to paper: analyze experiment results, generate figures, and write — all in one workflow
+- From data to paper: add experiment results as sources, analyze data, generate figures, and write — all in one workflow
+- Source management: manage PDFs, experiment data, and notes as references (inspired by NotebookLM)
+- Claude Code integration — reads your local files and writes LaTeX directly
 - Deep research: find and collect academic papers automatically
+- Claude Code skills designed for paper writing
 - Auto-fix compile errors
 - Desktop app (Electron) and web app (for remote servers)
 
@@ -51,13 +51,17 @@ If port 8080 is in use, it automatically tries 8081, 8082, etc.
 2. Select a directory
 3. Start writing LaTeX
 
+### Sources (optional)
+
+- Add local files (PDFs, CSVs, notes) via the Sources panel — their paths become visible to Claude Code
+- Or use Deep Research to find and add academic papers automatically
+
+### Claude Code
+
+1. Click "Start" or press Enter in the terminal panel to start Claude Code
+2. Enter instructions like "Write the introduction" or "Fix the compile error"
+
 ### Keyboard Shortcuts
 
 - `Cmd/Ctrl+S` - Save
 - `Cmd/Ctrl+B` - Compile to PDF
-
-### Claude Code Agent
-
-1. Click "Start" in the terminal panel
-2. Enter instructions like "Write the introduction" or "Fix the compile error"
-3. Auto-fix: Enable "Auto-start agent on compile error" in Settings
