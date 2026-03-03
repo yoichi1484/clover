@@ -47,9 +47,9 @@ function SourceItem({ source, onToggleEnabled, onClick }: SourceItemProps): JSX.
         type="checkbox"
         checked={isEnabled}
         onChange={(e) => {
-          e.stopPropagation()
           onToggleEnabled(source.id, e.target.checked)
         }}
+        onClick={(e) => e.stopPropagation()}
         className="w-4 h-4 cursor-pointer"
         style={{ accentColor: '#6b7280' }}
       />
