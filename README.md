@@ -2,7 +2,7 @@
 
 A LaTeX editor with Claude Code integration and NotebookLM-style source management, designed for writing papers from local data.
 
-![Clover](screenshot.png)
+![Clover](docs/ui.png)
 
 ## Features
 
