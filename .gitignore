@@ -39,4 +39,5 @@ test-*.mjs
 tmp/
 
 # Development plans
-docs/plans/
+/docs/plans/
+release/
