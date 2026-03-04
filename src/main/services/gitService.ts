@@ -1,6 +1,7 @@
 import { execFile } from 'child_process'
 import { promisify } from 'util'
-import { relative } from 'path'
+import { relative, join } from 'path'
+import { stat } from 'fs/promises'
 import { ipcMain } from 'electron'
 
 const execFileAsync = promisify(execFile)
@@ -8,7 +9,8 @@ const execFileAsync = promisify(execFile)
 export function registerGitHandlers() {
   ipcMain.handle('git:status', async (_event, projectPath: string) => {
     try {
-      await execFileAsync('git', ['rev-parse', '--is-inside-work-tree'], { cwd: projectPath })
+      // Check only for .git in the project directory itself, not parent directories
+      await stat(join(projectPath, '.git'))
       const { stdout } = await execFileAsync('git', ['status', '--porcelain'], { cwd: projectPath })
       const files = stdout.trim().split('\n').filter(Boolean).map(line => ({
         status: line.substring(0, 2).trim(),

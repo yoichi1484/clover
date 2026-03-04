@@ -2,6 +2,7 @@ import { Router } from 'express'
 import { execFile } from 'child_process'
 import { promisify } from 'util'
 import path from 'path'
+import { stat } from 'fs/promises'
 
 const execFileAsync = promisify(execFile)
 const router = Router()
@@ -12,7 +13,7 @@ router.get('/status', async (req, res) => {
   if (!projectPath) return res.status(400).json({ error: 'projectPath required' })
 
   try {
-    await execFileAsync('git', ['rev-parse', '--is-inside-work-tree'], { cwd: projectPath })
+    await stat(path.join(projectPath, '.git'))
     const { stdout } = await execFileAsync('git', ['status', '--porcelain'], { cwd: projectPath })
     const files = stdout.trim().split('\n').filter(Boolean).map(line => ({
       status: line.substring(0, 2).trim(),

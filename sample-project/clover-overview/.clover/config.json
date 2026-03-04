@@ -1,0 +1,12 @@
+{
+  "title": "clover-overview",
+  "template": "",
+  "agent": "claude",
+  "texCommand": "pdflatex",
+  "mainFile": "main.tex",
+  "resourcesDir": "resources",
+  "enableClaudeSkills": true,
+  "createdAt": "2026-03-04T04:44:47.704Z",
+  "updatedAt": "2026-03-04T04:47:00.942Z",
+  "lastOpenedFile": "main.tex"
+}

@@ -56,8 +56,9 @@ export function useProject(callbacks?: CompileCallbacks) {
       // Restore last opened file if it exists
       if (config.lastOpenedFile) {
         try {
-          const content = await api.readFile(config.lastOpenedFile)
-          editorStore.setCurrentFile(config.lastOpenedFile)
+          const fullPath = config.lastOpenedFile.startsWith('/') ? config.lastOpenedFile : `${path}/${config.lastOpenedFile}`
+          const content = await api.readFile(fullPath)
+          editorStore.setCurrentFile(fullPath)
           editorStore.setContent(content)
           editorStore.setDirty(false)
         } catch (error) {
@@ -149,7 +150,7 @@ export function useProject(callbacks?: CompileCallbacks) {
       if (project.projectPath && project.config) {
         const updatedConfig = {
           ...project.config,
-          lastOpenedFile: filePath,
+          lastOpenedFile: filePath.startsWith(project.projectPath + '/') ? filePath.slice(project.projectPath.length + 1) : filePath,
           updatedAt: new Date().toISOString()
         }
         await api.saveProjectConfig(project.projectPath, updatedConfig)

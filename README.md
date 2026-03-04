@@ -22,6 +22,20 @@ A LaTeX editor with Claude Code integration and NotebookLM-style source manageme
 - Your TeX environment ([TeX Live](https://www.tug.org/texlive/), MacTeX, MiKTeX, etc.)
 - [Claude Code](https://claude.com/product/claude-code)
 
+### Setup
+
+1. Install [Claude Code](https://claude.com/product/claude-code)
+2. Clone this repository and open it with Claude Code:
+```bash
+git clone https://github.com/yoichi1484/clover.git
+cd clover
+claude
+```
+3. Tell Claude Code:
+   > "Set up the TeX environment and launch Clover."
+
+Claude will install Node.js, TeX, and any other dependencies, then start the app.
+
 ### Desktop App (Electron)
 
 ```bash
@@ -54,12 +68,22 @@ If port 8080 is in use, it automatically tries 8081, 8082, etc.
 ### Add Sources (optional)
 
 - Add local files (PDFs, CSVs, notes) via the Sources panel — their paths become visible to Claude Code
-- Or use Deep Research to find and add academic papers automatically
+- Or tell Claude Code to find references:
+  > "Research the latest papers on coding agents and add them as sources"
 
-### Use Claude Code to Write a Paper
+### Writing with Claude Code
 
 1. Press Enter in the terminal panel to start Claude Code
-2. Enter instructions like "Write the introduction" or "Fix the compile error"
+2. Tell Claude what you want to write, for example:
+   > "Write a technical book about coding agents."
+3. Claude will ask clarifying questions (topic, audience, structure, etc.) and write the document — just answer and let it work
+
+### Example Projects
+
+Sample projects are in `sample-project/`. Each was created from an empty folder with a single instruction:
+
+- `clover-overview` — *"I want to write a book explaining Clover."* — complete in about an hour.
+- `survey-of-coding-agents` — *"Write a survey paper on coding agents."*
 
 ### Keyboard Shortcuts
 
