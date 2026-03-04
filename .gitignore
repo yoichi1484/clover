@@ -38,6 +38,5 @@ test-*.mjs
 # Temporary files
 tmp/
 
-# Development plans
-/docs/plans/
-release/
+# TypeScript build info
+*.tsbuildinfo
