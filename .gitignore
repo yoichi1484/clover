@@ -40,3 +40,6 @@ tmp/
 
 # TypeScript build info
 *.tsbuildinfo
+
+# Sample project gitignore files (each project manages its own)
+sample-project/**/.gitignore
