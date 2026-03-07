@@ -8,6 +8,7 @@ interface LatexEditorProps {
   value: string
   onChange: (value: string) => void
   onSave: () => void
+  onFeedbackSelection?: (selection: { fromLine: number; toLine: number; excerpt: string; x: number; y: number } | null) => void
 }
 
 // Comprehensive LaTeX language definition
@@ -151,10 +152,12 @@ const latexLanguage: monaco.languages.IMonarchLanguage = {
   }
 }
 
-export function LatexEditor({ value, onChange, onSave }: LatexEditorProps): JSX.Element {
+export function LatexEditor({ value, onChange, onSave, onFeedbackSelection }: LatexEditorProps): JSX.Element {
   const editorRef = useRef<monaco.editor.IStandaloneCodeEditor | null>(null)
   const monacoRef = useRef<typeof monaco | null>(null)
   const editorTheme = useEditorStore(state => state.editorTheme)
+  const onFeedbackSelectionRef = useRef(onFeedbackSelection)
+  useEffect(() => { onFeedbackSelectionRef.current = onFeedbackSelection }, [onFeedbackSelection])
 
   // Apply theme when it changes
   useEffect(() => {
@@ -212,6 +215,40 @@ export function LatexEditor({ value, onChange, onSave }: LatexEditorProps): JSX.
     // Add save shortcut
     editor.addCommand(monacoInstance.KeyMod.CtrlCmd | monacoInstance.KeyCode.KeyS, () => {
       onSave()
+    })
+
+    // Notify parent of selection changes for feedback
+    editor.onMouseUp((e) => {
+      console.log('[FeedbackDebug] onMouseUp fired', e.event.posx, e.event.posy)
+      const selection = editor.getSelection()
+      console.log('[FeedbackDebug] selection:', selection, 'isEmpty:', selection?.isEmpty())
+      if (!selection || selection.isEmpty()) {
+        onFeedbackSelectionRef.current?.(null)
+        return
+      }
+      const model = editor.getModel()
+      if (!model) return
+      const selectedText = model.getValueInRange(selection)
+      console.log('[FeedbackDebug] selectedText:', JSON.stringify(selectedText))
+      if (!selectedText.trim()) {
+        onFeedbackSelectionRef.current?.(null)
+        return
+      }
+      console.log('[FeedbackDebug] calling onFeedbackSelection with', { x: e.event.posx, y: e.event.posy })
+      onFeedbackSelectionRef.current?.({
+        fromLine: selection.startLineNumber,
+        toLine: selection.endLineNumber,
+        excerpt: selectedText.slice(0, 100),
+        x: e.event.posx,
+        y: e.event.posy,
+      })
+    })
+
+    editor.onDidChangeCursorSelection(() => {
+      const selection = editor.getSelection()
+      if (!selection || selection.isEmpty()) {
+        onFeedbackSelectionRef.current?.(null)
+      }
     })
   }
 

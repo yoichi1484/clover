@@ -370,11 +370,13 @@ export const TerminalPanel = forwardRef<TerminalPanelHandle, TerminalPanelProps>
   }, [isRunning])
 
   const startAndSendMessage = useCallback(async (message: string) => {
-    console.log('[TerminalPanel] startAndSendMessage called', { isRunning, messageLength: message.length })
-    if (isRunning) {
-      // Already running, send directly
-      console.log('[TerminalPanel] Already running, sending directly')
-      sendMessage(message)
+    console.log('[TerminalPanel] startAndSendMessage called', { isRunning, shellReady, messageLength: message.length })
+    if (shellReady) {
+      // Shell is up - send directly regardless of isRunning state
+      // (user may have started Claude manually without us detecting it)
+      console.log('[TerminalPanel] Shell ready, sending directly')
+      api.writeToPty(message + '\r')
+      setTimeout(() => { api.writeToPty('\r') }, 500)
       return
     }
 
@@ -385,7 +387,7 @@ export const TerminalPanel = forwardRef<TerminalPanelHandle, TerminalPanelProps>
     // Start Claude
     await startClaude()
     console.log('[TerminalPanel] startClaude completed')
-  }, [isRunning, sendMessage, startClaude])
+  }, [isRunning, shellReady, sendMessage, startClaude])
 
   useImperativeHandle(ref, () => ({
     isRunning,

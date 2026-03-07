@@ -15,6 +15,7 @@ import { latexmkRouter } from './routes/latexmk'
 import { appRouter } from './routes/app'
 import { directoriesRouter } from './routes/directories'
 import gitRouter from './routes/git'
+import feedbackRouter from './routes/feedback'
 import { setupPtyWebSocket } from './services/ptyManager'
 import { setupWatcherWebSocket } from './services/fileWatcher'
 import { setupCompileWebSocket } from './services/compileStream'
@@ -41,6 +42,7 @@ app.use('/api/latexmk', latexmkRouter)
 app.use('/api/app', appRouter)
 app.use('/api/directories', directoriesRouter)
 app.use('/api/git', gitRouter)
+app.use('/api/feedback', feedbackRouter)
 
 // Serve static files (built frontend)
 const staticPath = join(__dirname, '../../renderer')

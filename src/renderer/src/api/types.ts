@@ -17,6 +17,16 @@ export interface Source {
   enabled?: boolean  // undefined or true = enabled, false = disabled
 }
 
+export interface FeedbackItem {
+  id: string
+  file: string         // relative path from projectPath
+  fromLine: number
+  toLine: number
+  excerpt: string      // selected text (truncated to 100 chars)
+  text: string         // user's instruction
+  sent?: boolean       // true after being sent to agent
+}
+
 export type TexCompiler = 'pdflatex' | 'xelatex' | 'lualatex' | 'platex' | 'uplatex'
 export type TexLiveVersion = '2018' | '2019' | '2020' | '2021' | '2022' | '2023' | '2024' | '2025'
 
@@ -102,6 +112,13 @@ export interface CloverAPI {
   removeSource(projectPath: string, sourceId: string): Promise<void>
   listSources(projectPath: string): Promise<Source[]>
   setSourceEnabled(projectPath: string, sourceId: string, enabled: boolean): Promise<void>
+
+  // Feedback
+  listFeedback(projectPath: string): Promise<FeedbackItem[]>
+  addFeedback(projectPath: string, item: Omit<FeedbackItem, 'id'>): Promise<FeedbackItem>
+  removeFeedback(projectPath: string, id: string): Promise<void>
+  updateFeedback(projectPath: string, id: string, patch: Partial<FeedbackItem>): Promise<void>
+  clearFeedback(projectPath: string): Promise<void>
 
   // Latexmk configuration
   readLatexmkrc(projectPath: string): Promise<LatexmkSettings | null>

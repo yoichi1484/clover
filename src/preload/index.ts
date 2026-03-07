@@ -62,6 +62,16 @@ const api = {
     ipcRenderer.invoke('source:list', projectPath),
   setSourceEnabled: (projectPath: string, sourceId: string, enabled: boolean) =>
     ipcRenderer.invoke('source:setEnabled', projectPath, sourceId, enabled),
+  listFeedback: (projectPath: string) =>
+    ipcRenderer.invoke('feedback:list', projectPath),
+  addFeedback: (projectPath: string, item: object) =>
+    ipcRenderer.invoke('feedback:add', projectPath, item),
+  removeFeedback: (projectPath: string, id: string) =>
+    ipcRenderer.invoke('feedback:remove', projectPath, id),
+  updateFeedback: (projectPath: string, id: string, patch: object) =>
+    ipcRenderer.invoke('feedback:update', projectPath, id, patch),
+  clearFeedback: (projectPath: string) =>
+    ipcRenderer.invoke('feedback:clear', projectPath),
 
   // Latexmk configuration
   readLatexmkrc: (projectPath: string) =>

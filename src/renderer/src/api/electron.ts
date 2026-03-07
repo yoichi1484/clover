@@ -97,6 +97,11 @@ export const electronAPI: CloverAPI = {
   addSource: (projectPath, filePath) => window.api.addSource(projectPath, filePath),
   removeSource: (projectPath, sourceId) => window.api.removeSource(projectPath, sourceId),
   listSources: (projectPath) => window.api.listSources(projectPath),
+  listFeedback: (projectPath) => window.api.listFeedback(projectPath),
+  addFeedback: (projectPath, item) => window.api.addFeedback(projectPath, item),
+  removeFeedback: (projectPath, id) => window.api.removeFeedback(projectPath, id),
+  updateFeedback: (projectPath, id, patch) => window.api.updateFeedback(projectPath, id, patch),
+  clearFeedback: (projectPath) => window.api.clearFeedback(projectPath),
 
   // Latexmk configuration
   readLatexmkrc: (projectPath) => window.api.readLatexmkrc(projectPath),

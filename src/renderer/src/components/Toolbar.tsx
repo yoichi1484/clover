@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useProjectStore } from '../store'
-import { Club, Home, Settings } from 'lucide-react'
+import { Club, Home, Settings, MessageSquarePlus } from 'lucide-react'
 import { api } from '../api'
 
 interface ToolbarProps {
@@ -8,9 +8,11 @@ interface ToolbarProps {
   onOpenProject: () => void
   onSettings: () => void
   onHome: () => void
+  onFeedback: () => void
+  feedbackCount: number
 }
 
-export function Toolbar({ onNewProject, onOpenProject, onSettings, onHome }: ToolbarProps): JSX.Element {
+export function Toolbar({ onNewProject, onOpenProject, onSettings, onHome, onFeedback, feedbackCount }: ToolbarProps): JSX.Element {
   const { config } = useProjectStore()
 
   // Add padding for Mac traffic lights in Electron app
@@ -72,6 +74,16 @@ export function Toolbar({ onNewProject, onOpenProject, onSettings, onHome }: Too
         >
           <Settings size={14} />
           <span>Settings</span>
+        </button>
+
+        <button
+          onClick={onFeedback}
+          className="px-3 py-1.5 bg-gray-700 hover:bg-gray-600 rounded text-sm flex items-center gap-1 relative"
+          style={{ WebkitAppRegion: 'no-drag' } as React.CSSProperties}
+          title="Feedback"
+        >
+          <MessageSquarePlus size={14} />
+          <span>Feedback</span>
         </button>
       </div>
 

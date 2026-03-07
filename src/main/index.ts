@@ -8,6 +8,7 @@ import { registerSourceManagerHandlers } from './services/sourceManager'
 import { registerLatexmkConfigHandlers } from './services/latexmkConfig'
 import { registerPtyManagerHandlers, setPtyProjectPath } from './services/ptyManager'
 import { registerGitHandlers } from './services/gitService'
+import { registerFeedbackHandlers } from './services/feedbackManager'
 
 function createWindow(): void {
   const mainWindow = new BrowserWindow({
@@ -64,6 +65,7 @@ app.whenReady().then(() => {
   registerPtyManagerHandlers()
   registerProjectManagerHandlers()
   registerSourceManagerHandlers()
+  registerFeedbackHandlers()
   registerLatexmkConfigHandlers()
   registerGitHandlers()
 

@@ -8,6 +8,9 @@ import { DiffViewer } from './components/DiffViewer'
 import { TerminalPanel, TerminalPanelHandle } from './components/TerminalPanel'
 import { SourcesPanel } from './components/SourcesPanel'
 import { SettingsPanel } from './components/SettingsPanel'
+import { FeedbackPanel, PendingSelection } from './components/FeedbackPanel'
+import { FeedbackSelectionPopup } from './components/FeedbackSelectionPopup'
+import { FeedbackItem } from './api/types'
 import { Source } from './store/projectStore'
 import { StartScreen } from './components/StartScreen'
 import { DirectoryBrowser } from './components/DirectoryBrowser'
@@ -22,6 +25,13 @@ function App(): JSX.Element {
   const [commits, setCommits] = useState<{ hash: string; message: string; date: string }[]>([])
   const [gitStatuses, setGitStatuses] = useState<Map<string, string>>(new Map())
   const [gitNotInitialized, setGitNotInitialized] = useState(false)
+  const [showFeedbackPanel, setShowFeedbackPanel] = useState(false)
+  const [feedbackPanelHeight, setFeedbackPanelHeight] = useState(384)
+  const [feedbackItems, setFeedbackItems] = useState<FeedbackItem[]>([])
+  const [pendingSelection, setPendingSelection] = useState<PendingSelection | null>(null)
+  const [popupPosition, setPopupPosition] = useState<{ x: number; y: number } | null>(null)
+  const [selectionInfo, setSelectionInfo] = useState<{ fromLine: number; toLine: number; excerpt: string } | null>(null)
+  const feedbackResizeRef = useRef<{ startY: number; startHeight: number } | null>(null)
 
   const { projectPath, config } = useProjectStore()
   const { currentFile, content, pdfPath, compileError, isCompiling, diffMode, diffOriginalContent, selectedCommit } = useEditorStore()
@@ -146,9 +156,81 @@ function App(): JSX.Element {
     await api.setSourceEnabled(projectPath, sourceId, enabled)
   }, [projectPath])
 
+  const handleAddFeedback = useCallback(async (item: Omit<FeedbackItem, 'id'>) => {
+    if (!projectPath) return
+    const newItem = await api.addFeedback(projectPath, item)
+    setFeedbackItems(prev => [...prev, newItem])
+  }, [projectPath])
+
+  const handleRemoveFeedback = useCallback(async (id: string) => {
+    if (!projectPath) return
+    await api.removeFeedback(projectPath, id)
+    setFeedbackItems(prev => prev.filter(i => i.id !== id))
+  }, [projectPath])
+
+  const handleUpdateFeedback = useCallback(async (id: string, patch: Partial<FeedbackItem>) => {
+    if (!projectPath) return
+    await api.updateFeedback(projectPath, id, patch)
+    setFeedbackItems(prev => prev.map(i => i.id === id ? { ...i, ...patch } : i))
+  }, [projectPath])
+
+  const handleApplyFeedback = useCallback(async (items: FeedbackItem[]) => {
+    if (items.length === 0) return
+    const lines = items.map((item, i) => {
+      const range = item.fromLine === item.toLine
+        ? `${item.file} line ${item.fromLine}`
+        : `${item.file} lines ${item.fromLine}–${item.toLine}`
+      return `${i + 1}. ${range} "${item.excerpt}": ${item.text}`
+    })
+    const prompt = `Please revise the following based on this feedback:\n\n${lines.join('\n')}`
+    terminalRef.current?.startAndSendMessage(prompt)
+    for (const item of items) {
+      await handleUpdateFeedback(item.id, { sent: true })
+    }
+  }, [handleUpdateFeedback])
+
+  const handleFeedbackResizeStart = useCallback((e: React.MouseEvent) => {
+    e.preventDefault()
+    feedbackResizeRef.current = { startY: e.clientY, startHeight: feedbackPanelHeight }
+    const onMove = (ev: MouseEvent) => {
+      if (!feedbackResizeRef.current) return
+      const delta = feedbackResizeRef.current.startY - ev.clientY
+      const newHeight = Math.max(80, Math.min(600, feedbackResizeRef.current.startHeight + delta))
+      setFeedbackPanelHeight(newHeight)
+    }
+    const onUp = () => {
+      feedbackResizeRef.current = null
+      window.removeEventListener('mousemove', onMove)
+      window.removeEventListener('mouseup', onUp)
+    }
+    window.addEventListener('mousemove', onMove)
+    window.addEventListener('mouseup', onUp)
+  }, [feedbackPanelHeight])
+
+  const handleEditorFeedbackSelection = useCallback((sel: { fromLine: number; toLine: number; excerpt: string; x: number; y: number } | null) => {
+    if (!currentFile || !projectPath) return
+    if (sel) {
+      setSelectionInfo({ fromLine: sel.fromLine, toLine: sel.toLine, excerpt: sel.excerpt })
+      setPopupPosition({ x: sel.x, y: sel.y })
+    } else {
+      setSelectionInfo(null)
+      setPopupPosition(null)
+    }
+  }, [currentFile, projectPath])
+
   useEffect(() => {
     loadSources()
   }, [loadSources])
+
+  const loadFeedback = useCallback(async () => {
+    if (!projectPath) return
+    const items = await api.listFeedback(projectPath)
+    setFeedbackItems(items)
+  }, [projectPath])
+
+  useEffect(() => {
+    loadFeedback()
+  }, [loadFeedback])
 
   // Poll git status for file tree markers
   useEffect(() => {
@@ -206,6 +288,8 @@ function App(): JSX.Element {
             onOpenProject={handleOpenProject}
             onSettings={() => setShowSettingsPanel(true)}
             onHome={handleHome}
+            onFeedback={() => setShowFeedbackPanel(v => !v)}
+            feedbackCount={feedbackItems.length}
           />
         }
         sources={
@@ -306,29 +390,56 @@ function App(): JSX.Element {
         }
         editor={
           currentFile ? (
-            diffMode ? (
-              gitNotInitialized ? (
-                <div className="h-full flex items-center justify-center text-gray-400">
-                  <div className="text-center">
-                    <p className="text-sm mb-2">This project is not a git repository.</p>
-                    <p className="text-xs text-gray-500">Tell Claude Code: &quot;git init&quot;</p>
+            <div className="h-full flex flex-col">
+              <div
+                className={showFeedbackPanel ? 'flex-1 min-h-0' : 'h-full'}
+              >
+                {diffMode ? (
+                  gitNotInitialized ? (
+                    <div className="h-full flex items-center justify-center text-gray-400">
+                      <div className="text-center">
+                        <p className="text-sm mb-2">This project is not a git repository.</p>
+                        <p className="text-xs text-gray-500">Tell Claude Code: &quot;git init&quot;</p>
+                      </div>
+                    </div>
+                  ) : (
+                    <DiffViewer
+                      original={diffOriginalContent}
+                      modified={content}
+                    />
+                  )
+                ) : (
+                  <div className="h-full">
+                    <LatexEditor
+                      value={content}
+                      onChange={handleEditorChange}
+                      onSave={saveCurrentFile}
+                      onFeedbackSelection={handleEditorFeedbackSelection}
+                    />
+                  </div>
+                )}
+              </div>
+              {showFeedbackPanel && (
+                <div style={{ height: feedbackPanelHeight }} className="flex-shrink-0 flex flex-col">
+                  <div
+                    className="h-1 cursor-ns-resize bg-transparent hover:bg-blue-500/40 flex-shrink-0"
+                    onMouseDown={handleFeedbackResizeStart}
+                  />
+                  <div className="flex-1 min-h-0">
+                  <FeedbackPanel
+                    projectPath={projectPath}
+                    feedbackItems={feedbackItems}
+                    pendingSelection={pendingSelection}
+                    onAdd={handleAddFeedback}
+                    onRemove={handleRemoveFeedback}
+                    onApply={handleApplyFeedback}
+                    onUpdate={handleUpdateFeedback}
+                    onClearPending={() => setPendingSelection(null)}
+                  />
                   </div>
                 </div>
-              ) : (
-                <DiffViewer
-                  original={diffOriginalContent}
-                  modified={content}
-                />
-              )
-            ) : (
-              <div className="h-full">
-                <LatexEditor
-                  value={content}
-                  onChange={handleEditorChange}
-                  onSave={saveCurrentFile}
-                />
-              </div>
-            )
+              )}
+            </div>
           ) : (
             <div className="h-full flex items-center justify-center text-gray-500">
               Select a file to edit
@@ -352,6 +463,22 @@ function App(): JSX.Element {
         onClose={() => setShowSettingsPanel(false)}
       />
       {api.isWeb() && <DirectoryBrowser />}
+      {selectionInfo && popupPosition && (
+        <FeedbackSelectionPopup
+          visible={true}
+          position={popupPosition}
+          onClick={() => {
+            if (!selectionInfo || !currentFile || !projectPath) return
+            setShowFeedbackPanel(true)
+            setPendingSelection({
+              file: currentFile.startsWith(projectPath + '/') ? currentFile.slice(projectPath.length + 1) : currentFile,
+              ...selectionInfo,
+            })
+            setSelectionInfo(null)
+            setPopupPosition(null)
+          }}
+        />
+      )}
     </>
   )
 }

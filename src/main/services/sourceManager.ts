@@ -40,8 +40,8 @@ async function saveSources(projectPath: string, data: SourcesData): Promise<void
 export function registerSourceManagerHandlers(): void {
   ipcMain.handle('source:selectFiles', async (): Promise<string[] | null> => {
     const result = await dialog.showOpenDialog({
-      properties: ['openFile', 'multiSelections'],
-      title: 'Select Source Files'
+      properties: ['openFile', 'openDirectory', 'multiSelections'],
+      title: 'Select Source Files or Folders'
     })
     if (result.canceled) return null
     return result.filePaths

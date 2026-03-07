@@ -282,6 +282,17 @@ export const webAPI: CloverAPI = {
     body: JSON.stringify({ projectPath, enabled })
   }),
 
+  listFeedback: (projectPath) =>
+    fetchAPI(`/feedback?projectPath=${encodeURIComponent(projectPath)}`),
+  addFeedback: (projectPath, item) =>
+    fetchAPI('/feedback', { method: 'POST', body: JSON.stringify({ projectPath, ...item }) }),
+  removeFeedback: (projectPath, id) =>
+    fetchAPI(`/feedback/${id}?projectPath=${encodeURIComponent(projectPath)}`, { method: 'DELETE' }),
+  updateFeedback: (projectPath, id, patch) =>
+    fetchAPI(`/feedback/${id}`, { method: 'PATCH', body: JSON.stringify({ projectPath, ...patch }) }),
+  clearFeedback: (projectPath) =>
+    fetchAPI(`/feedback?projectPath=${encodeURIComponent(projectPath)}`, { method: 'DELETE' }),
+
   // Latexmk configuration
   readLatexmkrc: (projectPath) => fetchAPI(`/latexmkrc?projectPath=${encodeURIComponent(projectPath)}`),
 
